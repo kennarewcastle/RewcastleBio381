@@ -1,0 +1,18 @@
+---
+title: "Computational Biology Webpage"
+author: "Kenna Rewcastle"
+output:
+  prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+---
+
+*Index page successfully built.*
+
+<img src="Kenna_amanita.JPG" width="250" height="200" />
+
+**Contact:** kenna.rewcastle@uvm.edu  
+  
+I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
+
+[RMarkdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)   
