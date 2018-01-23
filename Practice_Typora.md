@@ -56,3 +56,5 @@ LaTex editor for manuscript prep = overleaf. Overleaf has lots of good templates
 LaTex uses a percentage sign for its comments. This means that you can annotate your manuscript without it showing up in the rendered manuscript—great for just leaving notes during the editing process.
 
 LaTex/Overleaf doesn't really have the track-changes functionality, but you can address this by using different colors for different authors.
+
+Command + shift + K will automatically knit the markdown for you into an html document. 
