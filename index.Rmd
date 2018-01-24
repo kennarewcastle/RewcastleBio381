@@ -15,4 +15,6 @@ output:
   
 I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
 
-[RMarkdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf)   
+[RMarkdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) 
+
+[Link](http://support.typora.io/Draw-Diagrams-With-Markdown/) for Typora Mermaid flowchart help.
