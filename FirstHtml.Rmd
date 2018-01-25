@@ -2,12 +2,20 @@
 title: "First Markdown Document!"
 author: "Kenna Rewcastle"
 date: "1/23/2018"
-output: html_document
+output: 
+  html_document: 
+    keep_md: yes
+    theme: cerulean
+    toc: yes
+  pdf_document: 
+    number_sections: yes
+    toc: yes
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE) # This sets up echo/eval options GLOBALLY for all chunks in the rest of the file. Can override this default by specifying echo/eval in subsequent chunks.
 ```
+Up above, include=FALSE hides that chunk of code from your output.
 
 ## R Markdown
 
@@ -28,3 +36,44 @@ plot(pressure)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+## More LaTex tricks
+
+### Summation
+
+$$\sum_{i=1}^S{n_i}=N$$
+
+### Sentence text
+
+$$p(\mbox{Occurrence of species X})=0.67$$
+
+### Escaping the backslash
+
+$$\backslash a \le b \backslash$$
+
+Rendering code of \LaTeX
+
+```{r, echo=FALSE}
+library(ggplot2)
+waterTemp<-runif(50)
+planktonAbun<-runif(50)
+qplot(x=waterTemp,y=planktonAbun) # qplot, unlike the ggplot function, does not require a dataframe
+# print(waterTemp)
+# head(waterTemp) # head() returns the first 6 entries in a vector to give you a peak at the contents
+```
+
+(Typing outside of the code fence puts you back in the world of `markdown`.)
+
+Output from the print() function is deliberately prefaced with ## so that when copying and pasting code from a webpage, this output will not run with the rest of the code even if included in the destination script.
+
+The echo=false line of code in the {} part of the code fence hides the lines of code when you knit the file, but the output is still rendered.
+
+```{r, echo=TRUE, eval=TRUE, message=FALSE}
+qplot(x=waterTemp) # Without a y value, qplot produces a histogram of your data.
+```
+
+Using eval=FALSE tells computer to not run the code in that chunk when rendering file.
+
+Using message=FALSE hides the warning messages that result from running the code from your HTML output.
+
+
