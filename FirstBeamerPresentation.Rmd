@@ -1,0 +1,54 @@
+---
+title: "First Beamer!"
+author: "Kenna Rewcastle"
+date: "1/30/2018"
+output: 
+  beamer_presentation: 
+    colortheme: beaver
+    incremental: yes
+    theme: Madrid
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Slide title
+
+Add your markdown text, etc. etc. for display on the screen, but remember, these are **slides** so we don't want too much text!
+
+## Second slide
+
+- First incremental bullet point
+- Second incremental bullet point
+- Third incremental bullet point 
+
+## Third slide
+
+>- first simultaneous bullet point
+>- second simultaneous bullet point
+>- third simultaneous bullet point
+
+## Let's see some R
+```{r, echo=FALSE}
+library(ggplot2)
+var1<-runif(10)
+var2<-runif(10)
+qplot(x=var1,y=var2)
+```
+
+## Colored bullet points
+>- Collection Mode
+>- \color{gray} Spatial and Temporal
+>- \color{red} Taxonomic Bias
+>- \color{gray} Sampling \color{black}
+>- more stuff
+
+## Pulling images
+\begin{picture}(320,250)
+\put(85,75){\includegraphics[height=6cm] {celtic.jpg}}
+\put(00,60){\begin{minipage}[t]{1\linewidth} {Choose a point on the unit circle. Connect it to 
+the origin with a line of length one, and denote the angle between that line 
+and the horizontal coordinate axis by $\theta$.}
+\end{minipage}}
+\end{picture}
