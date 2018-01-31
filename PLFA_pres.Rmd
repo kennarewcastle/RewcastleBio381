@@ -1,0 +1,16 @@
+---
+title: "Who's Eating the Carbon? Linking microbial community structure to decomposition"
+author: "Kenna Rewcastle"
+date: "1/31/2018"
+output: 
+  beamer_presentation: 
+    colortheme: seahorse
+    incremental: yes
+    theme: Rochester
+    includes: 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
