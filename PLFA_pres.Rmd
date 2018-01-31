@@ -30,3 +30,13 @@ knitr::opts_chunk$set(echo = FALSE)
 \end{minipage}}
 \end{picture}
 
+## Looking at PLFA Output
+
+\begin{picture}(320,250)
+\put(25,75){\includegraphics[height=6cm] {PLFA-results.jpg}}
+\put(00,60){\begin{minipage}[t]{1\linewidth} {13C PLFA includes an extra step where $\delta$13C is calculated. PLFA compounds with 13C label will be heavier and have a different GC-MS peak.}
+\end{minipage}}
+\end{picture}
+
+
+
