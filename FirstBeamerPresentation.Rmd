@@ -13,9 +13,7 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Slide title
 
-Add your markdown text, etc. etc. for display on the screen, but remember, these are **slides** so we don't want too much text!
 
 ## Second slide
 
