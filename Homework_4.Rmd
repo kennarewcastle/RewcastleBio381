@@ -1,0 +1,111 @@
+---
+title: "Homework 4"
+author: "Kenna Rewcastle"
+date: "2/7/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Suppose x = 1.1, a = 2.2, and b = 3.3. Assign each expression to the value of the variable z and print the value stored in z.
+
+```{r}
+x<-1.1
+a<-2.2
+b<-3.3
+```
+
+a) x^a^b
+
+```{r}
+z<-x^(a^b)
+print(z)
+```
+
+b) (x^a)^b
+
+```{r}
+z<-(x^a)^b
+print(z)
+```
+
+c) 3x^3 + 2x^2 + 1
+
+```{r}
+z<-3*x^3 + 2*x^2 + 1
+print(z)
+```
+
+d) The digit in the second place of z.
+
+```{r}
+Z<-as.integer(substring(z, seq(nchar(z)), seq(nchar(z))))
+Z_use<-na.omit(Z)
+print(Z_use[2])
+```
+
+2.Using the rep and seq functions, create the following vectors:
+
+a) (1,2,3,4,5,6,7,8,7,6,5,4,3,2,1)
+
+```{r}
+a1<-seq(1:8)
+a2<-seq(from=7,to=1)
+a<-c(a1,a2)
+print(a)
+```
+
+b) (1,2,2,3,3,3,4,4,4,4,5,5,5,5,5)
+
+```{r}
+b1<-seq(1:5)
+b<-rep(b1,times=b1)
+print(b)
+```
+
+c) (5,4,4,3,3,3,2,2,2,2,1,1,1,1,1)
+
+```{r}
+c1<-seq(1:5)
+c2<-seq(from=5,to=1)
+c<-rep(c2,times=c1)
+print(c)
+```
+
+3. Create a vector of two random uniform numbers. In a spatial map, these can be interpreted as x and y coordinates that give the location of an individual (such as a marked forest tree in a plot that has been mapped). Using one of R’s inverse trigonometry functions (asin(), acos(), or atan()), convert these numbers into polar coordinates.
+
+```{r}
+myVect<-runif(n=2) # create a vector of 2 random numbers drawn from a uniform distriubtion
+
+cart2pol <- function(vect) # fucntion that converts cartesian coordintes to polar coordinates
+{
+  x<-vect[1]
+  y<-vect[2]
+  r <- sqrt(x^2 + y^2)
+  t <- atan(y/x)
+
+  pol<-c(r,t)
+  print(pol)
+}
+
+cart2pol(vect=myVect) # converts my cartesian coordinates to polar coordinates, output= polar coordinates
+```
+
+4. Suppose that queue <- c("sheep", "fox", "owl", "ant") and that queue represents the animals that are lined up to enter Noah’s Ark, with the sheep at the front of the line. Using R expressions, update the queue successively as:
+
+a) the serpent arrives
+
+```{r}
+queue<-c("sheep", "fox", "owl", "ant")
+queue<-c(queue,"serpent")
+print(queue)
+```
+
+b) the sheep enters the ark
+
+```{r}
+
+```
+
