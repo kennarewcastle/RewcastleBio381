@@ -4,11 +4,6 @@ author: "Kenna Rewcastle"
 date: "2/7/2018"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 1. Suppose x = 1.1, a = 2.2, and b = 3.3. Assign each expression to the value of the variable z and print the value stored in z.
 
 ```{r}
@@ -106,6 +101,122 @@ print(queue)
 b) the sheep enters the ark
 
 ```{r}
-
+queue<-queue[2:5]
+print(queue)
 ```
+
+c) the donkey arrives and talks his way to the front of the line
+
+```{r}
+queue<-c("donkey",queue)
+print(queue)
+```
+
+d) the serpent gets impatient and leaves
+
+```{r}
+queue<-queue[queue != "serpent"]
+print(queue)
+```
+
+e) the owl gets bored and leaves
+
+```{r}
+queue<-queue[queue != "owl"]
+print(queue)
+```
+
+f) the aphid arrives and the ant invites him to cut in line
+
+```{r}
+queue<-c(queue[1:2],"aphid",queue[3])
+print(queue)
+```
+
+g) Finally, determine the position of the aphid in the line.
+
+```{r}
+which(queue == "aphid")
+```
+
+5. Use R to create a vector of all of the integers from 1 to 100 that are not divisible by 2, 3, or 7.
+
+```{r}
+start5<-seq(1:100)
+final5<-start5[!start5%%2==0 & !start5%%3==0 & !start5%%7==0] # %% gives you the remainder
+print(final5)
+```
+
+6. Create a vector z of 1000 random uniform numbers.
+
+```{r}
+z<-runif(1000)
+```
+
+a) Create a vector that contains 3 numbers: the proportion of the numbers in z that are less than 0.10, greater than 0.90, and between 0.45 and 0.55.
+
+```{r}
+a<-z[z<0.10]
+b<-z[z>0.90]
+c<-z[z>0.45 & z<0.55]
+
+final_vect<-c((length(a)/1000),(length(b)/1000),(length(c)/1000))
+print(final_vect)
+```
+
+b) Making successive copies of z, transform your vector of uniform numbers in the following ways.
+c) For each case calculate your vector of 3 numbers to get the new proportions.
+
+b1) log (base 10) of z
+
+```{r}
+z1<-log10(z) # transform z
+
+a1<-z1[z1<0.10]
+b1<-z1[z1>0.90]
+c1<-z1[z1>0.45 & z1<0.55]
+
+final_vect1<-c((length(a1)/1000),(length(b1)/1000),(length(c1)/1000)) # calculates proportions
+print(final_vect1)
+```
+
+b2) z^2
+
+```{r}
+z2<-z^2
+
+a2<-z2[z2<0.10]
+b2<-z2[z2>0.90]
+c2<-z2[z2>0.45 & z2<0.55]
+
+final_vect2<-c((length(a2)/1000),(length(b2)/1000),(length(c2)/1000))
+print(final_vect2)
+```
+
+b3) e^z
+
+```{r}
+z3<-exp(z) 
+
+a3<-z3[z3<0.10]
+b3<-z3[z3>0.90]
+c3<-z3[z3>0.45 & z3<0.55]
+
+final_vect3<-c((length(a3)/1000),(length(b3)/1000),(length(c3)/1000))
+print(final_vect3)
+```
+
+b4) square root of z
+
+```{r}
+z4<-sqrt(z)
+
+a4<-z4[z4<0.10]
+b4<-z4[z4>0.90]
+c4<-z4[z4>0.45 & z4<0.55]
+
+final_vect4<-c((length(a4)/1000),(length(b4)/1000),(length(c4)/1000))
+print(final_vect4)
+```
+
 
