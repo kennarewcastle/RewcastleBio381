@@ -58,3 +58,22 @@ rownames(m2)[4]<-"Species X"
 
 myVec<-as.vector(m)
 myVec
+
+# Lists are vectors but each element can hold things of different sizes and different types
+
+myList<-list(1:10,matrix(1:8,nrow=4,byrow=TRUE),letters[1:3],pi)
+myList
+str(myList) # gives a summary of the components of a list
+
+# To pull out the value in a list element, use double brackets!
+myList[[4]] # output is the raw element itself
+
+# Combine single and double brackets to access single items in list components
+myList[[2]][4,1] # go to myList, pullout second list component (a matrix), then pull out element at specific location in the matrix
+
+# Name list items as we create them
+myList2<-list(Tester=FALSE, littleM=matrix(1:9,nrow=3)) # Gives names (Tester and littleM) to each componenet in the list. Don't put these in quotes! Names are essentially variables.
+
+m[1] # output is the first element... using a single index value vs. 2 index values searches for that element given its order in the atomic vector; will traverse the columns regardless of specifying that we built the matrix row by row
+
+              
