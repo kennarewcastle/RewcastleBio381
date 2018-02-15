@@ -39,3 +39,47 @@ temp<-rnorm(1000)
 Histo(xData=temp,fColor="cyan3")
 ```
 
+Make a new function to create histograms that will work better for integer values.
+
+```{r}
+# function iHisto
+# works better for integer values
+# input xData = vector of integers (yes, same label as above, but what happens within a function stays in that function)
+# input fColor = fill color (character string of color name)
+# output = summary of X data
+# output = histogram of integers
+# output = 95% empirical interval
+
+iHisto<-function(xData=runif(1000),fColor="palegreen4") {
+  z<-qplot(x=factor(xData),color=I("black"),fill=I(fColor),xlab="X",boundary=0)
+  print(z)
+  print(summary(xData))
+  print(quantile(xData,probs=c(0.025,0.975)))
+}
+
+```
+
+Compare the output from the two Histo functions that we created.
+
+```{r}
+temp2<-rpois(n=1000,lambda=10.1) # drawing from a poisson distribution, generates a series of discrete integers
+# lambda is a rate of occurrence of a relatively rare event (lots of 0s)
+
+Histo(xData=temp2,fColor="goldenrod") # some of the bars are totally empty!
+iHisto(xData=temp2,fColor="purple") # no gaps in histogram
+```
+
+Above, iHisto usage kicks out a warning when boundary=0 is not used, this is because the poisson distribution has a natural minimum limit at 0, so the boundary definition is redundant.
+
+Poisson distributions approach a normal distribution for larger lambda values, but for small lambda values (more infrequent events), the distribution is weighted on 0.
+
+
+
+Binomial distributions involve a number from 0 that indicates the number of trials (n parameter) and the probability of success (p parameter) as well as the number of events in each trial (size parameter).
+
+```{r}
+x<-rbinom(n=1000,size=40,p=0.75)
+iHisto(xData=x,fColor="midnightblue")
+```
+
+
