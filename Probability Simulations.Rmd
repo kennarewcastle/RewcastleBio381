@@ -1,0 +1,41 @@
+---
+title: "Using Probability Simulation in R"
+author: "Kenna Rewcastle"
+date: "2/15/2018"
+output: html_document
+---
+
+```{r}
+library (ggplot2)
+testData<-runif(1000)
+qplot(x=testData) # Creates a histogram of testData
+```
+
+## Creating functions in R
+
+```{r}
+# Create a function called histo that makes better histograms than qplot.
+# input xData = numeric vector
+# input fColor= fill color
+# output = corected ggplot histogram
+# output = summary statistics
+# output = 95% empirical interval (what range in the value of x covers 95% of the area under the PDF)
+
+Histo<-function(xData=runif(1000),fColor="palegreen4") {
+  z<-qplot(x=xData,color=I("black"),fill=I(fColor),xlab="X",boundary=0)
+  print(z)
+  print(summary(xData))
+  print(quantile(xData,probs=c(0.025,0.975)))
+}
+
+# Test function now... we have provided default values so we don't have to provide data to test!
+Histo()
+```
+
+Use our new function to look at a different distribution of data (Histo's default is a uniform distribution).
+
+```{r}
+temp<-rnorm(1000)
+Histo(xData=temp,fColor="cyan3")
+```
+
