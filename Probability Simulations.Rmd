@@ -75,11 +75,156 @@ Poisson distributions approach a normal distribution for larger lambda values, b
 
 
 
-Binomial distributions involve a number from 0 that indicates the number of trials (n parameter) and the probability of success (p parameter) as well as the number of events in each trial (size parameter).
+Binomial distributions are discrete distributions (coin toss) and involve a number from 0 that indicates the number of trials (n parameter) and the probability of success (p parameter) as well as the number of events in each trial (size parameter).
 
 ```{r}
 x<-rbinom(n=1000,size=40,p=0.75)
 iHisto(xData=x,fColor="midnightblue")
 ```
 
+Poisson distributions mimic a constant rate process of events occurring randomly and indpendently with a constant, known rate (lambda)
+
+```{r}
+z<-rpois(n=1000,lambda=1)
+iHisto(z)
+mean(z==0) # 36% chance that event will not occur
+```
+
+Critique of poisson distributions is that they don't express the heterogeniety of data. Better to use negative binomial.
+
+Negative binomial distribution ranges from 0 to infinity. It is a distribution of the number of failures until we get to a certain number of successes. Allows for more variation than does a simple poisson process.
+
+Ex. Game where we toss two coins. Success = 2 heads (not necessarily consecutive). How many failures happen until we get to 2 heads?
+
+HH = 0 failures
+THH, HTH = 1 failure
+HTTH, THTH = 2 failures
+
+```{r}
+# negative binomial
+# n= number of replicates
+# size = number of trials
+# p = probability of success with one trial
+
+z<-rnbinom(n=1000,size=2,p=0.5)
+iHisto(z) # much longer and variable tale towards low probability outcomes
+
+# size = index of "overdispersion"
+# small size = high dispersion (especially when size is less than one)
+
+z<-rnbinom(n=1000,mu=1.1,size=0.7)
+
+# special case when number of trials = 1
+
+z<-rnbinom(n=1000,size=1,p=0.95)
+iHisto(z)
+```
+
+Multi-nomial distribution = "balls in urns" allows for multiple outcomes unlinke binomial.
+```{r}
+z<-rmultinom(n=1,size=20,prob=c(0.2,0.7,0.1)) # the number of items in the probability vector corresponds to the number of "urns"
+```
+
+Creating multinomial using the sample function.
+
+```{r}
+z<-sample(x=LETTERS[1:3],size=10,prob=c(0.2,0.7,0.1),replace=TRUE)
+table(z)
+```
+
+##### CONTINUOUS DISTRIBUTIONS #####
+
+Uniform distribution only involves the minimum and maximum values, then data is distributed equi-probabilistically across this range.
+
+```{r}
+z<-runif(n=1000,min=3,max=10.2)
+Histo(z)
+```
+
+Normal distribution involves parameters that detail the mean and the standard deviation. Folowing the central limits theorem, if you increase the sample size, all datasets will eventually converge on a normal distribution.
+
+```{r}
+z<-rnorm(n=1000,mean=2.2,sd=6)
+Histo(z,fColor="midnightblue")
+```
+
+Gamma distribution is analagous to the negative binomail distribution for a continuous variable, shows the distribution of waiting times for a failure (time is measured continuously). Parameters are the shape and scale parameters. Mean = shape x scale, variance = shape x scale^2. There are no zeros or negative values in this distribution.
+
+```{r}
+z<-rgamma(n=1000,shape=1,scale=10)
+Histo(z,fColor="midnightblue")
+
+z<-rgamma(n=1000,shape=10,scale=10)
+Histo(z,fColor="midnightblue")
+
+z<-rgamma(n=1000,shape=0.1,scale=0.1)
+Histo(z,fColor="midnightblue")
+```
+
+Beta distribution is bounded between 0 and 1. To change that boundary, add or multiply the final vector after simulating an initial beta distribution. The beta distribution is a conjugate prior for a binomial distriubtion (previous expectation for parameter values). 
+
+In a binomial, we begin with a probability, and generate a number of successes and failures. But in ecology, we want to go the other way. We usually start with data that contains the number of successes and failures, and we want to know the underlying probability. Just taking a regular mean (# successes/( # success + failure)) to get this probability doesn't factor in our underlying uncertainty, especially for small sample sizes. 
+
+Shape 1 parameter = number of successes + 1
+Shape 2 parameter = number of failures + 1
+
+```{r}
+z<-rbeta(n=1000,shape1=1,shape2=1) # this indicates no data, 0 successes and 0 failures
+Histo(z)
+
+# Toss the coin once and get 1 heads
+
+z<-rbeta(n=1000,shape1=2,shape2=1) # this indicates 1 success, 0 failures
+Histo(z)
+
+# Toss the coin a second time, get tails
+
+z<-rbeta(n=1000,shape1=2,shape2=2) # Distribution no longer looks like a uniform distribution because we have data that informs our estimate of the probability of success
+Histo(z)
+
+z<-rbeta(n=1000,shape1=11,shape2=11) # The more information we have, the narrower the confidence interval surrounding our probability estimate.
+Histo(z)
+
+z<-rbeta(n=1000,shape1=100,shape2=10) # Biased coin with a large amount of data
+Histo(z)
+
+z<-rbeta(n=1000,shape1=0.1,shape2=2) # Can have postiive values that are less than one for parameters
+Histo(z)
+
+z<-rbeta(n=1000,shape1=0.1,shape2=0.3) # Generates a bimodal distribution
+Histo(z)
+```
+
+Now we want to generate parameters estimates from data instead of generating data from known parameters.
+
+Statistical p-value= p(data|hypothesis) OR p(data|theta1,theta2) i.e. what is the probability of the data given the model parameters (as a hypothesis).
+
+Could also ask the inverse: What's the probability of the parameters given the data? p(theta1,theta2|data)
+
+Maximum likelihood = max(p(theta1,theta2|data))
+
+The mean and the variance in a normal distribution are the maximum likelihood estimate.
+
+```{r}
+library(MASS)
+# Maximum likelihood estimation in R
+
+x<-rnorm(n=1000,mean=92.5,sd=2.5)
+Histo(x,fColor="midnightblue")
+
+zFit<-fitdistr(x,"normal") # Fit distribution, needs input of data (x) and what distribution you want to fix those data to.
+str(zFit)
+zFit$estimate # mean and sd match the parameter values given during our initial data simulation
+
+# Now use fitdistr to fit data to a gamma distribution
+zFit<-fitdistr(x,"gamma")
+zFit$estimate # gives shape and rate parameters
+
+zNew<-rgamma(n=1000,shape=1449,rate=15.7) # using estimates above
+Histo(zNew)
+summary(x) # min and max are Max Like estimators for a uniform distribution
+
+z<-runif(n=1000,min=85, max=101)
+Histo(z,fColor="purple")
+```
 
