@@ -18,3 +18,9 @@ I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
 [RMarkdown Cheatsheet](https://www.rstudio.com/wp-content/uploads/2015/02/rmarkdown-cheatsheet.pdf) 
 
 [Link](http://support.typora.io/Draw-Diagrams-With-Markdown/) for Typora Mermaid flowchart help.
+
+## Homework Assignments
+
+Assignment  | Output | Content Description
+------------- | -------------- |----------- 
+Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio381/) | Create a website for 
