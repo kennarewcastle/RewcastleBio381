@@ -7,8 +7,6 @@ output:
     highlight: github
 ---
 
-*Index page successfully built.*
-
 <img src="Kenna_amanita.JPG" width="250" height="200" />
 
 **Contact:** kenna.rewcastle@uvm.edu  
