@@ -23,4 +23,4 @@ I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
 
 Assignment  | Output | Content Description
 ------------- | -------------- |----------- 
-Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio381/) | Create a website for 
+Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio381/) | Create a website for github repository. | -
