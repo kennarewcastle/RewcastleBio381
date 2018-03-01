@@ -99,4 +99,42 @@ HardyWeinberg3<-function(p=runif(1)) {
 }
 ##################################################################################################
 
-temp<-HardyWeinberg3(1.1) # Does not run function, produces error message that gives our stop error message.
+temp1<-HardyWeinberg3(1.1) # Does not run function, produces error message that gives our stop error message.
+
+#### Understanding scope of local and global variables
+
+myFunc<-function(a=3,b=4){
+  z<-a+b
+  return(z)
+}
+
+myFunc()
+
+myFuncBad<-function(a=3){
+  z<-a+bbb
+  return(z)
+}
+
+myFuncBad() # Fails because bbb can't be found locally within the function or globally as an object outside the function body.
+
+bbb<-100
+myFuncBad() # Works, but BAD coding style, never refer to things in global environment that are not declared as local objects through the function input.
+
+####################################################################################################
+# FUNCTION: fitLinear
+# fits linear regression
+# input: numeric vectors of x and y
+# output: slope and p value
+#----------------------------------------------
+fitLinear<-function(x=runif(20),y=runif(20)){
+  myMod<-lm(y~x) # fits model
+  myOut<-c(slope=summary(myMod)$coefficients[2,1],pVal=summary(myMod)$coefficients[2,4])
+  plotVar<-qplot(x=x,y=y)
+  print(plotVar)
+  return(myOut)
+}
+#####################################################################################################
+
+fitLinear() # Output is a scatter plot, slope, and p-value
+
+
