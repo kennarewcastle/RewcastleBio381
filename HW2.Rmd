@@ -1,0 +1,12 @@
+---
+title: "HW2"
+author: "Kenna Rewcastle"
+date: "3/1/2018"
+output: html_document
+---
+
+![](Dissertation_PathDiagram2.png)
+
+This is my proposal diagram. 
+
+![](Dissertation_PathDiagram2.png)
