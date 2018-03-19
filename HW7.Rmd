@@ -1,0 +1,64 @@
+---
+title: 'Homework 7: Simulating Data to Refine Experimental Design'
+author: "Kenna Rewcastle"
+date: "2/28/2018"
+output: html_document
+---
+
+### Hypothesis: Roots and mycorrhizae prime the microbial community in the rhizosphere.
+
+Mycorrhizae produce extracellular enzymes that stimulate decomposition of both leaf and starch substrates. Roots exude carbohydrates, relatively labile carbon substrates, to the rhizosphere that promote the growth and activity of the microbial community, stimulating greater decomposition in the rhizosphere as compared to the bulk soil. Together, these priming effects of roots and mycorrhizae mean that treatments that allow roots and mychorrizae to access the mesocosm will have higher rates of ^13^CO~2~ release from degradation of the labeled leaf and starch substrates and greater incorporation of these labeled substrates in microbial biomass.
+
+## Experimental Design
+
+48 in situ soil mesocosms were labeled with a ^13^C-leaf substrate (16 mesocosms for each of 3 rhizosphere manipulation treatments). 48 in situ mesocosms were labeled with a ^13^C-starch substrate (16 mesocosms f0r each of 3 rhizosphere manipulation treatments). To measure decomposition of each substrate, we collected gas samples from each mesocosm and measured the $$\delta$$ ^13^CO~2~ signatures of these gase samples. To trace these substrates into the microbial pool actively involved in the degradation of the substrates, we ran a ^13^C-PLFA analysis to measure the $$\delta$$ ^13^CO~2~ signature in fatty acid methyl ester compounds (FAME compounds) associated with broad microbial taxonomic groups.
+
+## Data Simulation
+
+```{r}
+##### Establishes identifiers for all mesocosms and the treatments applied to each
+
+mesoID<-seq(1:96) # Unique IDs for all mesocosms
+substrate<-c(rep("leaf",times=48),rep("starch",times=48)) # Substrate added to each mesocosm
+mesh<-rep(1:3,each=16,times=2) # Rhizosphere manipulation treatment (diameter of mesh, 1 = finest mesh (-R-M), 2 = medium mesh (-R+M), 3 = largest diameter mesh (+R+M)
+
+
+##### Response variable: delta 13C of FAME compounds for each treatment (label x mesh)
+
+d13FAME_1S<-rnorm(n=16, mean=-20, sd=7) 
+# Mesh 1, slightly higher mean than background natural abundance of 13C (delta 13C = -25) b/c no priming without roots and mycorrhizae results in limited uptake
+
+d13FAME_1L<-rnorm(n=16, mean=-20, sd=7) 
+# Leaf labeled, mesh 1, assume no difference in FAME delta 13C due to substrate complexity, so no difference in d13FAME for mesocosms of the same mesh size with labeled with leaf or starch substrates (ie mean is same as above)
+
+d13FAME_2S<-rnorm(n=16, mean=-10, sd=7) 
+# Starch labeled, mesh 2, mycorrhizae present so higher microbial uptake than mesh 1
+
+d13FAME_2L<-rnorm(n=16, mean=-10, sd=7) 
+# Leaf labeled, mesh 2, assumed same as with starch label
+
+d13FAME_3S<-rnorm(n=16, mean=0, sd=7) 
+# Starch labeled, mesh 3, roots and mycorrhizae present so highest microbial uptake due to priming
+
+d13FAME_3L<-rnorm(n=16, mean=0, sd=7) 
+# Leaf labeled, mesh 3, assumed same as with starch label
+
+
+##### Response variable: delta 13C of CO2 in gas samples collected from each mesoscom
+
+average = 10 +/- 25 all the way up to 100 +/- 25
+
+
+##### Combine all vectors into one dataframe
+
+d13FAME<-c(d13FAME_1L,d13FAME_2L,d13FAME_3L,d13FAME_1S,d13FAME_2S,d13FAME_3S)
+FAMEdat<-data.frame(mesoID,substrate,mesh,d13FAME)
+
+
+```
+
+
+
+
+
+
