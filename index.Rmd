@@ -22,4 +22,5 @@ I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
 Assignment  | Output | Content Description
 ------------- | -------------- |----------- 
 Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio381/) | Create a website for github repository. | -
-[Homework 2](https://gotellilab.github.io/Bio381/Homeworks/Homework02_2018.html) | [Concept Diagrams](filename) | Created a flowchart and a dipswitch test to conceptualize experimental design. | -
+[Homework 2](https://gotellilab.github.io/Bio381/Homeworks/Homework02_2018.html) | [Concept Diagrams](HW2.html) | Created a flowchart using `mermaid` themes in `Typora` and a dipswitch test to conceptualize experimental design. | -
+[Homework 3](https://gotellilab.github.io/Bio381/Homeworks/Homework03_2018.html) | [Beamer Presentations] | Created a presentation using the `Beamer` format in an Rmd file. | -
