@@ -26,3 +26,4 @@ Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio38
 [Homework 3](https://gotellilab.github.io/Bio381/Homeworks/Homework03_2018.html) | [Beamer Presentations](PLFA_pres.pdf) | Created a presentation using the `Beamer` format in an Rmd file. | -
 [Homework 4](https://gotellilab.github.io/Bio381/Homeworks/Homework04_2018.html) | [Basic R Coding](Homework_4.html) | Using basic functions in R, including `rep` and `seq` functions and subsetting notation to manipulate data objects. | -
 [Homework 5](https://gotellilab.github.io/Bio381/Homeworks/Homework05_2018.html) | [Regular Expressions](RewcastleHW5.html) | Use `BBedit` software and regular expressions to manipulate plain text data files. | -
+[Homework 6](https://gotellilab.github.io/Bio381/Homeworks/Homework06_2018.html) | Data Distributions | Explored simulating and fitting data distributions. | -
