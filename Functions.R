@@ -137,4 +137,11 @@ fitLinear<-function(x=runif(20),y=runif(20)){
 
 fitLinear() # Output is a scatter plot, slope, and p-value
 
+##### Dealing with too many parameters by bundling them up
 
+z<-c(runif(99),NA)
+mean(z) # Need to account for NA
+mean(x=z,na.rm=TRUE) # One way to remove NAs
+mean(x=z,na.rm=TRUE,trim=0.05) # Strips most extreme outliers off of data (retains 95% of values)
+l<-list(x=z,na.rm=TRUE,trim=0.05)
+do.call(mean,l) # Provide a function and the parameter list l to avoid having to type all of the parameters over and over again

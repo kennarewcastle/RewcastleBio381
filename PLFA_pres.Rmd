@@ -1,5 +1,5 @@
 ---
-title: "Who's Eating the Carbon? Linking microbial community structure to decomposition"
+title: "Who's Eating the Carbon? Linking microbial community structure to decomposition with 13C-PLFA"
 author: "Kenna Rewcastle"
 date: "1/31/2018"
 output: 
@@ -14,11 +14,11 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Why PLFA (Phospholipid Fatty Acids)?
+## Why 13C-PLFA (Phospholipid Fatty Acids)?
 
 - Microbes breakdown C substrates --> incorporate some of this C into their biomass
 \bigskip
-- Different classes of microbes have unique cell membrane components --> used to assess community structure
+- Different classes of microbes have unique cell membrane components --> used to assess \color{red} community structure
 \bigskip
 - Microbes that breakdown 13C labeled substrates incorporate this isotopic signature into their biomass
 
@@ -30,13 +30,19 @@ knitr::opts_chunk$set(echo = FALSE)
 \end{minipage}}
 \end{picture}
 
-## Looking at PLFA Output
+## Breaking Down PLFA Analyses
 
-\begin{picture}(320,250)
-\put(25,75){\includegraphics[height=6cm] {PLFA-results.jpg}}
-\put(00,60){\begin{minipage}[t]{1\linewidth} {13C PLFA includes an extra step where $\delta$13C is calculated. PLFA compounds with 13C label will be heavier and have a different GC-MS peak.}
+\begin{picture}(280,280)
+\put(00,110){\includegraphics[scale=0.86] {soil_bug.jpg}}
+\put(00,170){\begin{minipage}[t]{1\linewidth} \color{white} \textbf {The $\delta$13C label identifies the microbial groups that metabolized the substrate.}
 \end{minipage}}
 \end{picture}
+
+## Conclusion: Advantages and Disadvantages of 13C-PLFA
+
+>- Identifies the \textit{active} microbial community.
+>- Shows the relative abundance of relatively broad taxonomic groups. 
+>- Cheaper than RNA sequencing techniques, but still an expensive analysis with lower taxonomic resolution.
 
 
 
