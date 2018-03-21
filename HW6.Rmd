@@ -147,4 +147,34 @@ pSpecial + statSpecial
 
 #### Reflections on distribution fit
 
-The `gamma` distribution appears to fit this data set best, though the fit is marginally better than that of the `normal` distribution which does not require scaling the data to yield postiive values. I will use the `gamma` distrubution to calculate the maximum likliehood estimates of the relevant parameters, in this case, the shape parameter $\kappa$ and the scale parameter $\theta$.
+The `gamma` distribution appears to fit this data set best, though the fit is marginally better than that of the `normal` distribution which does not require scaling the data to yield postiive values. I will use the `gamma` distrubution to calculate the maximum likliehood estimates of the relevant parameters, in this case, the shape parameter $\alpha$ and the rate parameter $\beta$.
+
+#### Maximum likelihood parameter estimates
+
+Going back to the `gamma` distribution code above, we find that the MLE for $\alpha$ is 54.15 and is 0.63 for $\beta$. Note that these estimates are derived from a data set that has been adjusted by adding 100 to all data values in order to eliminate negative values.
+
+```{r}
+print(shapeML)
+print(rateML)
+```
+
+#### Simulating data from `gamma` distribution MLEs
+
+```{r}
+length(z$myVar) # 76
+fakeVar<-rgamma(n=76,shape=shapeML,rate=rateML) # Vector of 76 elements drawn from gamma distribution with the same shape and rate parameters as original data.
+summary(fakeVar)
+
+fakeID<-seq(from=1,to=76)
+fakeDat<-data.frame(fakeID,fakeVar)
+head(fakeDat)
+```
+
+#### Histogram of simulated data
+
+```{r}
+fake1 <- ggplot(data=fakeDat, aes(x=fakeVar, y=..density..)) +
+  geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
+print(fake1)
+```
+
