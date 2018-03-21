@@ -26,12 +26,22 @@ To illustrate, we will generate some fake data here:
 ```{r}
 # quick and dirty, a truncated normal distribution to work on the solution set
 
-z <- rnorm(n=3000,mean=0.2)
-z <- data.frame(1:3000,z)
-names(z) <- list("ID","myVar")
-z <- z[z$myVar>0,]
-str(z)
-summary(z$myVar)
+#z <- rnorm(n=3000,mean=0.2)
+#z <- data.frame(1:3000,z)
+#names(z) <- list("ID","myVar")
+#z <- z[z$myVar>0,]
+#str(z)
+#summary(z$myVar)
+
+# Fake data has been commented out. Below, I am reading in data from 13C-PLFA project
+
+z <- read.table("mean_dat.csv",header=TRUE,sep=",", stringsAsFactors=FALSE)
+names(z)
+d13<-z$d13
+myVar<-d13+100 # Scaled all d13 values by 100 so that the values are positive, necessary for exponential and gamma distributions
+ID<-z$unique_ID
+z<-data.frame(ID,myVar) # Constrain dataframe down to single variable (scaled delta13) and an integer ID
+head(z)
 ```
 
 #### Plot histogram of data
