@@ -1,0 +1,14 @@
+---
+title: "Homework 7 and 8"
+author: "Kenna Rewcastle"
+date: "3/21/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Creating Fake Data Sets to Explore Hypotheses
+
+The purpose of this exercise is to statistically explore an experimental design using s before implenting the 
