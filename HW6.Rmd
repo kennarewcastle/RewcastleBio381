@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE)
 ```{r}
 library(ggplot2) # for graphics
 library(MASS) # for maximum likelihood estimation
+library(gridExtra) # for displaying histograms side by side
 ```
 
 #### Read in data vector
@@ -32,9 +33,11 @@ To illustrate, we will generate some fake data here:
 #z <- z[z$myVar>0,]
 #str(z)
 #summary(z$myVar)
+```
 
-# Fake data has been commented out. Below, I am reading in data from 13C-PLFA project
+Fake data has been commented out. This data set is scaled to eliminate negative numbers so that the fit of the normal distribution can be compared to the exponential and gamma distriubtions. 
 
+```{r}
 z <- read.table("mean_dat.csv",header=TRUE,sep=",", stringsAsFactors=FALSE)
 names(z)
 d13<-z$d13
@@ -147,22 +150,38 @@ pSpecial + statSpecial
 
 #### Reflections on distribution fit
 
-The `gamma` distribution appears to fit this data set best, though the fit is marginally better than that of the `normal` distribution which does not require scaling the data to yield postiive values. I will use the `gamma` distrubution to calculate the maximum likliehood estimates of the relevant parameters, in this case, the shape parameter $\alpha$ and the rate parameter $\beta$.
+The `gamma` distribution appears to fit this data set best, though the fit is marginally better than that of the `normal` distribution which does not require scaling the data to yield postiive values. Therefore, I will use the `normal` distribution to describe the "un-scaled" original data. Using my data and the normal distribution fitted to that data, I will find the maximum likelihood estimates for the descriptive parameters of this distribution, the mean and standard deviation, and will simulate a data set of the same size using these parameter values.
 
 #### Maximum likelihood parameter estimates
 
-Going back to the `gamma` distribution code above, we find that the MLE for $\alpha$ is 54.15 and is 0.63 for $\beta$. Note that these estimates are derived from a data set that has been adjusted by adding 100 to all data values in order to eliminate negative values.
+This data frame is the original data, un-scaled, that will be used to simulate a fake data set using the MLE for mean and standard deviation from a normal distribution.
 
 ```{r}
-print(shapeML)
-print(rateML)
+z <- read.table("mean_dat.csv",header=TRUE,sep=",", stringsAsFactors=FALSE)
+names(z)
+ID<-z$unique_ID
+myVar<-z$d13
+z<-data.frame(ID,myVar)
+head(z)
 ```
 
-#### Simulating data from `gamma` distribution MLEs
+Going back to the `normal` distribution code above, we find that the MLE for the mean is -13.42 and is and the MLE for the standard deviation is 12.07. 
+
+```{r}
+normPars <- fitdistr(z$myVar,"normal")
+
+meanML <- normPars$estimate["mean"]
+sdML <- normPars$estimate["sd"]
+
+print(meanML)
+print(sdML)
+```
+
+#### Simulating data from `normal` distribution MLEs
 
 ```{r}
 length(z$myVar) # 76
-fakeVar<-rgamma(n=76,shape=shapeML,rate=rateML) # Vector of 76 elements drawn from gamma distribution with the same shape and rate parameters as original data.
+fakeVar<-rnorm(n=76,mean=meanML,sd=sdML) # Vector of 76 elements drawn from normal distribution with the same mean and sd parameter values as above.
 summary(fakeVar)
 
 fakeID<-seq(from=1,to=76)
@@ -170,11 +189,28 @@ fakeDat<-data.frame(fakeID,fakeVar)
 head(fakeDat)
 ```
 
-#### Histogram of simulated data
+#### Histogram of simulated data with empirical density curve
+
+Empirical density curve is not associated with any stats, but simply smooths out the histogram.
 
 ```{r}
 fake1 <- ggplot(data=fakeDat, aes(x=fakeVar, y=..density..)) +
   geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
+
+fake1 <-  fake1 +  geom_density(linetype="dotted",size=0.75)
 print(fake1)
 ```
 
+#### Comparing the distributions of simulated and original data
+
+```{r}
+p1 <- ggplot(data=z, aes(x=myVar, y=..density..)) +
+  geom_histogram(color="grey60",fill="cornsilk",size=0.2) 
+
+p1 <-  p1 +  geom_density(linetype="dotted",size=0.75)
+
+
+grid.arrange(fake1,p1,ncol=2)
+```
+
+The main difference between the density profiles of the simulated and original data is that the simulated data from the normal distribution model constrains the range of the data by minimizing the tail on the right. The variation in the simulated data is essentially distributed equally on either side of the mean instead of being skewed to the right as in the original data.
