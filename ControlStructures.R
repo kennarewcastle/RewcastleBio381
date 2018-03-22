@@ -70,7 +70,7 @@ for (i in zz2) { # Defines the length of the sequence according to a constant
 
 # Don't do anything in the for loop unless you have to, will slow the operation down significantly.
 
-# Don't change object dimensions in a loop.
+# Don't change object dimensions in a loop, i.e. using the commands c, cbind, rbind, list. --> runs very slowly in R!
 
 myDat<-runif(1)
 
@@ -78,4 +78,47 @@ for(i in 2:10) {
   temp<-signif(runif(1), digits=2)
   myDat<-c(myDat,temp)
   cat("loop number =", i, "vector element =", myDat[i], "\n")
+}
+
+# Don't write a loop if you can avoid it by vectorizing!
+
+myDat<-1:10
+
+for (i in seq_along(myDat)) {
+  myDat[i]<-myDat[i] + myDat[i]^2
+  cat("loop number =", i, "vector element =", myDat[i], "\n")
+}
+
+# Could accomplish this using a vector
+z<-1:10
+z<-z+z^2
+
+z<-c(10,2,4)
+for (i in seq_along(z)){
+  cat("i = ",i," z[i] = ",z[i],"\n")
+}
+
+# Counter variable retains its final value.
+i
+
+# Use 'next' to skip elements in a loop. 
+# Operate only on odd-numbered elements (when z is odd)
+z<-1:20
+zstore<-rep(NA,length(z))
+
+for (i in seq_along(z)) {
+  if (i %% 2 == 0) next # i.e. if i is perfectly divisble by 2 with no remainder (if i is even), skip it
+  print(i)
+  zstore[i]<-i
+}
+
+zstore # Intersperses odd numbers with NA values where for loop skipped
+zstore<-zstore[complete.cases(zstore)] # Removes the NAs
+
+# Simpler way to do this operation without using a for loop is to subset the vector
+z<-1:20
+zsub<-z[z %% 2!=0]
+
+for (i in seq_along(zsub)){
+  cat("i=",i," zsub[i]=",zsub[i],"\n")
 }
