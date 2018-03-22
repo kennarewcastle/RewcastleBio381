@@ -128,10 +128,19 @@ $(document).ready(function () {
 <div id="creating-fake-data-sets-to-explore-hypotheses" class="section level2">
 <h2>Creating Fake Data Sets to Explore Hypotheses</h2>
 <p>The purpose of this exercise is to statistically explore an experimental design using simulated data before implenting the design. We will simulate data that would be expected if a specific hypothesis were true.</p>
-<p>In this case, we assume that the presence of roots and mycorrhizae stimulates microbial assimilation of carbon substrates. The presence of these rhizosphere components has a larger effect on the assimilation of leaf substrates than on the assimilation of labile starch substrates.</p>
-<div id="simulating-data-for-each-treatment-group." class="section level4">
-<h4>Simulating data for each treatment group.</h4>
-<p>The response variable in this context is the <span class="math inline">\(\delta\)</span> <sup>13</sup>C signal in the phospholipid components of microbial cell membranes. Background, naturally occurring <span class="math inline">\(\delta\)</span> <sup>13</sup>C values for soil microbes is approximately -25 ‰, and values closer to 0 ‰ <span class="math inline">\(\delta\)</span> <sup>13</sup>C can be expected when microbes are actively breaking down and assimilating labeled substrates to the greatest extent.</p>
+<p>In this case, we assume that the presence of roots and mycorrhizae stimulates microbial assimilation of carbon substrates. The presence of these rhizosphere components has a larger effect on the assimilation of leaf substrates than on the assimilation of labile starch substrates. Tree type does not affect assimilation of these substrates.</p>
+<div id="simulating-data-for-each-treatment-group." class="section level3">
+<h3>Simulating data for each treatment group.</h3>
+<p>The response variable in this context is the <span class="math inline">\(\delta\)</span> <sup>13</sup>C signal in the phospholipid components of microbial cell membranes. Background, naturally occurring <span class="math inline">\(\delta\)</span> <sup>13</sup>C values for soil microbes is approximately -25 ‰, and values closer to 0 ‰ <span class="math inline">\(\delta\)</span> <sup>13</sup>C can be expected when microbes are actively breaking down and assimilating labeled substrates to the greatest extent. For each of six treatment groups (2 substrate types x 3 rhizosphere manipulation core types) there are 12 replicates.</p>
+<div id="setting-up-a-data-frame." class="section level4">
+<h4>Setting up a data frame.</h4>
+<pre class="r"><code>ID&lt;-seq(from=1,to=72) # creates a unique ID for each sample
+core&lt;-rep(1:3,each=12,times=2) # string of core treatment IDs
+label&lt;-rep(c(&quot;L&quot;,&quot;S&quot;),each=36) # string of substrate type IDs</code></pre>
+</div>
+<div id="simulate-delta13c-values-response-variable-for-each-treatment-group-according-to-a-normal-distribution." class="section level4">
+<h4>Simulate <span class="math inline">\(\delta\)</span><sup>13</sup>C values (response variable) for each treatment group according to a normal distribution.</h4>
+</div>
 </div>
 </div>
 

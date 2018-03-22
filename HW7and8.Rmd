@@ -13,16 +13,31 @@ knitr::opts_chunk$set(echo = TRUE)
 
 The purpose of this exercise is to statistically explore an experimental design using simulated data before implenting the design. We will simulate data that would be expected if a specific hypothesis were true. 
 
-In this case, we assume that the presence of roots and mycorrhizae stimulates microbial assimilation of carbon substrates. The presence of these rhizosphere components has a larger effect on the assimilation of leaf substrates than on the assimilation of labile starch substrates. Tree type does not affect assimilation of these substrates.
-
-### Simulating data for each treatment group.
+In this case, we assume that the presence of roots and mycorrhizae stimulates microbial assimilation of complex carbon substrates, like the added leaf substrate, but the presence of these components has no effect on the assimilation of labile starch substrates. Tree type does not affect assimilation of these substrates.
 
 The response variable in this context is the $\delta$ ^13^C signal in the phospholipid components of microbial cell membranes. Background, naturally occurring $\delta$ ^13^C values for soil microbes is approximately -25 &permil;, and values closer to 0 &permil; $\delta$ ^13^C can be expected when microbes are actively breaking down and assimilating labeled substrates to the greatest extent. For each of six treatment groups (2 substrate types x 3 rhizosphere manipulation core types) there are 12 replicates.
 
-#### Setting up a data frame.
+
+#### Set up a data frame for data simulation.
+
 ```{r}
 ID<-seq(from=1,to=72) # creates a unique ID for each sample
 core<-rep(1:3,each=12,times=2) # string of core treatment IDs
 label<-rep(c("L","S"),each=36) # string of substrate type IDs
-
 ```
+
+
+#### Simulate $\delta$^13^C values (response variable) for each treatment group according to a normal distribution.
+
+"L" denotes that mesocosms were labeled with a ^13^C leaf substrate, and "S" denotes that a ^13^C starch substrate was added. Cores labeled "1" were covered with a very fine mesh that excluded both roots and mycorrhizae from the mesocosms (-R-M), "2" cores were covered with a wider mesh that allowed mycorrhizal ingrowth but exluded roots from the mesoscms (-R+M), and "3" cores were covered with the largest diameter mesh that allowed both roots and mycorrhizae to access the mesocosms (+R+M).
+
+```{r}
+# Leaf labeled cores with effect of rhizosphere manipulation
+L1<-rnorm(12,mean=-20,sd=10) # lowest assimilation of added substrate, mean is close to background levels
+L2<-rnorm(12,mean=-10,sd=10) # moderate assimilation
+L3<-rnorm(12,mean=0,sd=10) # highest assimilation
+  
+# Strach labeled cores, rhizosphere manipulation does not affect microbial assimilation of substrate
+S<-rnorm(36,mean=-15,sd=10)
+```
+
