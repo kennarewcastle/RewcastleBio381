@@ -44,6 +44,9 @@ FileBuilder<-function(fileN=10,
                     row.names="",
                     col.names="",
                     sep=""))
+    
+    # Add the data frame to the csv
+    write.table(x=dF,file=fileLabel,sep=",",row.names=FALSE,append=TRUE) # append adds the data frame to      the metadata instead of overwriting it
                     
-  }
-}
+  } # close for loop
+} # close function
