@@ -21,10 +21,12 @@ I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
 
 Assignment  | Output | Content Description
 ------------- | -------------- |----------- 
-Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio381/) | Create a website for github repository. | -
-[Homework 2](https://gotellilab.github.io/Bio381/Homeworks/Homework02_2018.html) | [Concept Diagrams](HW2.html) | Created a flowchart using `mermaid` themes in `Typora` and a dipswitch test to conceptualize experimental design. | -
-[Homework 3](https://gotellilab.github.io/Bio381/Homeworks/Homework03_2018.html) | [Beamer Presentations](PLFA_pres.pdf) | Created a presentation using the `Beamer` format in an Rmd file. | -
+Homework 1  | [Website Creation](https://kennarewcastle.github.io/RewcastleBio381/) | Creating a website for github repository. | -
+[Homework 2](https://gotellilab.github.io/Bio381/Homeworks/Homework02_2018.html) | [Concept Diagrams](HW2.html) | Creating flowcharts using `mermaid` themes in `Typora` and a dipswitch test to conceptualize experimental design. | -
+[Homework 3](https://gotellilab.github.io/Bio381/Homeworks/Homework03_2018.html) | [Beamer Presentations](PLFA_pres.pdf) | Creating a presentation using the `Beamer` format in an Rmd file. | -
 [Homework 4](https://gotellilab.github.io/Bio381/Homeworks/Homework04_2018.html) | [Basic R Coding](Homework_4.html) | Using basic functions in R, including `rep` and `seq` functions and subsetting notation to manipulate data objects. | -
-[Homework 5](https://gotellilab.github.io/Bio381/Homeworks/Homework05_2018.html) | [Regular Expressions](RewcastleHW5.html) | Use `BBedit` software and regular expressions to manipulate plain text data files. | -
-[Homework 6](https://gotellilab.github.io/Bio381/Homeworks/Homework06_2018.html) | [Data Distributions](HW6.html) | Explored simulating and fitting data distributions. | -
-[Homework 7 and 8](https://gotellilab.github.io/Bio381/Homeworks/Homework08_2018.html) | Data Simulation | Simulated fake data sets to preemptively test hypotheses and modify experimental designs at the onset of a project. | -
+[Homework 5](https://gotellilab.github.io/Bio381/Homeworks/Homework05_2018.html) | [Regular Expressions](RewcastleHW5.html) | Using `BBedit` software and regular expressions to manipulate plain text data files. | -
+[Homework 6](https://gotellilab.github.io/Bio381/Homeworks/Homework06_2018.html) | [Data Distributions](HW6.html) | Exploring data simulation and fitting data distributions. | -
+[Homework 7 and 8](https://gotellilab.github.io/Bio381/Homeworks/Homework08_2018.html) | Data Simulation | Simulating fake data sets to preemptively test hypotheses and modify experimental designs at the onset of a project. | -
+[Homework 9](https://gotellilab.github.io/Bio381/Homeworks/Homework09_2018.html) | Structured Programming | Using `for loops` and other control structures to explore and test hypotheses. | -
+[Homework 10](https://gotellilab.github.io/Bio381/Homeworks/Homework10_2018n.html) | [Batch Processing](HW10.html) | Using control structures to batch process numerous data files iteratively. | -
