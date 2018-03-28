@@ -87,3 +87,43 @@ fileOut<-"StatsSummary.csv"
 
 # Create 100 random datasets
 FileBuilder(fileN=nFiles)
+
+fileNames<-list.files(path=fileFolder) # Creates list of file names to be used in batch processing
+
+# Create data frame to hold file summary statistics (results of batch processing)
+ID<-seq_along(fileNames)
+fileName<-fileNames
+slope<-rep(NA,nFiles) # Empty vector to be filled in by batch processing loop
+pVal<-rep(NA,nFiles)
+r2<-rep(NA,nFiles)
+
+statsOut<-data.frame(ID,fileName,slope,pVal,r2)
+
+# Batch process by looping through indvidual files, pulling out summary stats
+for (i in seq_along(fileNames) {
+  data<-read.table(file=paste(fileFolder,fileNames[i],sep=""),
+                   sep=",",
+                   header=TRUE) # Reads in data file
+  dClean<-data[complete.cases(data),] # Removes observations (rows) that contain NAs in any column
+  .<-regStats(dClean) # Retrieves regression stats from clean file
+  statsOut[i,3:5]<-unlist(.) # Deconstructs list and places reg stats in last 3 columns of output file
+}
+
+# Set up output file and incorporate time stamp and minimal metadata
+write.table(cat("# Summary stats for batch processing of regression models","\n",
+                "# timestamp: ",as.character(Sys.time()),"\n",
+                "# KER","\n",
+                "# ------------------------", "\n",
+                "\n",
+                file=fileOut,
+                row.names="",
+                col.names="",
+                sep=""))
+
+# Add the data frame to the file that has been prepped with metadata
+write.table(x=statsOut,
+            file=fileOut,
+            row.names=FALSE,
+            col.names=TRUE,
+            sep=",",
+            append=TRUE)
