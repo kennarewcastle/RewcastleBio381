@@ -2,7 +2,7 @@
 # 27 March 2018
 # KER
 
-##########################################################################################################
+#########################################################################################################
 # FUNCTION: FileBuilder
 # create a set of random files for regression
 # input: fileN = number of files to create
@@ -10,7 +10,7 @@
 # fileSize = c(min,max), min and max number of rows in a file
 # fileNA = number on average of NA per column (make data more realistic)
 # output: set of random files
-#---------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
 
 FileBuilder<-function(fileN=10,
                       fileFolder="RandomFiles/", # Forward slash in RandomFiles tells R that it's a folder
@@ -52,12 +52,12 @@ FileBuilder<-function(fileN=10,
 } # close function
 
 
-##########################################################################################################
+#########################################################################################################
 # FUNCTION: regStats
 # fit linear model, get regression stats
 # input: 2-column data frame
 # output: slope, p-value, and r2
-#---------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------
 
 regStats<-function(d=NULL) {
   if(is.null(d)) { # Minimalist code for default data frame
@@ -72,7 +72,7 @@ regStats<-function(d=NULL) {
   return(statsList)
 }
 
-##########################################################################################################
+#########################################################################################################
 
 # Start body of program
 library(TeachingDemos)
@@ -96,17 +96,21 @@ fileName<-fileNames
 slope<-rep(NA,nFiles) # Empty vector to be filled in by batch processing loop
 pVal<-rep(NA,nFiles)
 r2<-rep(NA,nFiles)
+numbRows<-rep(NA,nFiles)
+numbCleanRows<-rep(NA,nFiles)
 
-statsOut<-data.frame(ID,fileName,slope,pVal,r2)
+statsOut<-data.frame(ID,fileName,slope,pVal,r2,numbRows,numbCleanRows)
 
 # Batch process by looping through indvidual files, pulling out summary stats
-for (i in seq_along(fileNames) {
+for (i in seq_along(fileNames)) {
   data<-read.table(file=paste(fileFolder,fileNames[i],sep=""),
                    sep=",",
                    header=TRUE) # Reads in data file
   dClean<-data[complete.cases(data),] # Removes observations (rows) that contain NAs in any column
   .<-regStats(dClean) # Retrieves regression stats from clean file
   statsOut[i,3:5]<-unlist(.) # Deconstructs list and places reg stats in last 3 columns of output file
+  statsOut[i,6]<-nrow(data) # Lists the number of rows in the data file before the NAs were removed
+  statsOut[i,7]<-nrow(dClean)
 }
 
 # Set up output file and incorporate time stamp and minimal metadata
