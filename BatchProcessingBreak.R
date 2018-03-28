@@ -14,8 +14,8 @@
 
 FileBuilderBreak<-function(fileN=10,
                       fileFolder="RandomFilesBreak/", # Forward slash in RandomFiles tells R that it's a folder
-                      fileSize=c(0,100), # Adjusted so minimum rows of data = 0
-                      fileNA=3) { 
+                      fileSize=c(15,50), # Adjusted so minimum rows of data = 1
+                      fileNA=10) { 
   for (i in seq_len(fileN)) {
     fileLength<-sample(fileSize[1]:fileSize[2],size=1) # Draw a number at random from this range
     varX<-runif(fileLength) # Random x values
