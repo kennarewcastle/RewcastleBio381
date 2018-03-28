@@ -1,0 +1,18 @@
+---
+title: "Homework 10"
+author: "Kenna Rewcastle"
+date: "3/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Code for simulating random data files that we can then batch process to retrieve summary statistics for each file using a for loop.
+
+```{r}
+
+```
+
+We can break our batch processing program by increasing the number of NAs in the data set or decreasing the minimum number of rows during the creation of the random data files. When there are too few data rows in a given file or too many NAs in a data file, running the batch processing for loop that calls our `regStats` function to fit linear models to each data file that has been stripped of `NA` values, an error message is produced indicating that there are too few "non-NA" cases to fit a linear model using the `lm` function. Batch processing is halted entirely and no summary statistics output table is created. If this was an error encountered by running batch processing on actual data, we could write a for loop to scan our data files before batch processing (i.e. make a summary table of the number of rows in each clean data file) so we could flag and remove the problem files that prevent batch processing of the rest of the files.
