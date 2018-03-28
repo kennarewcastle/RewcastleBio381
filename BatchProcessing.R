@@ -50,3 +50,40 @@ FileBuilder<-function(fileN=10,
                     
   } # close for loop
 } # close function
+
+
+##########################################################################################################
+# FUNCTION: regStats
+# fit linear model, get regression stats
+# input: 2-column data frame
+# output: slope, p-value, and r2
+#---------------------------------------------------------------------------------------------------------
+
+regStats<-function(d=NULL) {
+  if(is.null(d)) { # Minimalist code for default data frame
+    xVar<-runif(10)
+    yVar<-runif(10)
+    d<-data.frame(xVar,yVar)
+  }
+  .<-lm(data=d,d[,2]~d[,1]) # Creates lm regardless of what the columns are labeled
+  .<-summary(.) # The dot serves as a placeholder to keep the lm
+  
+  statsList<-list(Slope=.$coefficients[2,1],pVal=.$coefficients[2,4],r2=.$r.squared)
+  return(statsList)
+}
+
+##########################################################################################################
+
+# Start body of program
+library(TeachingDemos)
+char2seed("Freezing March")
+
+#___________________________________________________________
+
+# Global variables
+fileFolder<-"RandomFiles/"
+nFiles<-100
+fileOut<-"StatsSummary.csv"
+
+# Create 100 random datasets
+FileBuilder(fileN=nFiles)
