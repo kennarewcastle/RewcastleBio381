@@ -115,26 +115,12 @@ for(i in 1:length(cPars)) {
   }
 }
 
-# modelFrame # Successfully filled our new data frame with species richness values!
+modelFrame # Successfully filled our new data frame with species richness values!
 
-#########################################################################################################
-# FUNCTION: SpeciesAreaPlot
-# Plot of relationship between S and A using base graphics
-# input: A = vector of island areas
-#        c = intercept constant
-#        z = slope
-# output: base graph with parameter values
-#--------------------------------------------------------------------------------------------------------
+library(ggplot2)
+p1<-ggplot(data=modelFrame)
+p1 + geom_line(mapping=aes(x=A, y=S)) + facet_grid(c~z)
 
-SpeciesAreaPlot<-function(A=1:5000, c=0.5, z=0.26) {
-  
-  plot(x=A, y=SpeciesAreaCurve(A=A, c=c, z=z),  # Calls previous function to calculate y values (sp. rich)
-       type="l",
-       xlab="Island Area",
-       ylab="S",
-       ylim=c(0,2500))
-  
-  mtext(paste("c = ",c,"z = ",z),cex=0.7) # mtext= margin text, cex= character expansion (magnification)
-  
-  return() # Graph will be dumped out, but the output will read "NULL"
-}
+p2<-p1
+p2 + geom_line(mapping=aes(x=A, y=S,group=z)) + facet_grid(.~c)
+
