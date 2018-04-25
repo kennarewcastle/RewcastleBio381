@@ -1,0 +1,131 @@
+---
+title: "Metafor Package Tutorial"
+author: "Kenna Rewcastle"
+date: "April 24th, 2018"
+output: html_document
+---
+
+### Meta-Analysis Basics
+
+We collect $i$ studies that where each study independently reports an observed effect ${y_i}$. Each observed effect estimates the  unknown true effect size ${\theta_i}$ of the treatment or relationship, but includes some variation due to sampling error ${v_i}$.
+
+$${y_i}={\theta_i}+{v_i}$$
+
+### Random-effect Models
+
+Usually, all studies considered are not identical in methodology for producing or measuring the observed effect, or in the inherent qualities of the samples themselves included in each study. This heterogeniety among samples affects the estimate of the *true* effect size. One way to account for this heterogeniety is to consider it a random effect of each study.
+
+$${\theta_i}=\mu+{u_i}$$
+
+Where ${\theta_i}$ is again the true effect, $\mu$ is the mean of the normally distributed true effects amongst all studies and ${u_i}$ is the random effect of the heterogeniety amongst studies so that ${u_i}{\sim}N(0,{\tau^2})$. Here, ${\tau^2}$ gives the total heterogeniety among the true effects in all studies. 
+
+### Standardized Mean Differences
+
+Standardized mean differences, `SMD`, are commonly used when meta-analyzing studies that compare two treatment groups, such as an experimental and a control group. These studies apply a treatment and measure an observed response variable, in this case a quantitative, continous variable. The differences in the mean response variable between treatment `m1i` and control groups `m2i` is standardized by the pooled standard deviation of the two groups `spi`. These values are calculated for each independent study `i`.
+
+```
+SMD = (m1i - m2i)/spi
+```
+
+To use raw mean differences that are not standardzied by the variance, use `measure = "MD"`.
+
+#### Example: Nitrogen Fertilization Experiment
+
+For example, in a fertilization experiment, half of the 1 meter-square plots receive a nitrogen treatment (experimental treatment) and the other half do not (control treatment). Plant biomass (g dry weight) is measured in all plots, and the mean and standard deviation of plant biomass is calculated for each treatment. The difference between these two treatments is the mean plant biomass of the experimental group minus the mean plant biomass of the control group, divided by the pooled standard deviation of the two groups.
+
+### Fitting an SMD Random-Effect Model for a Meta-Analysis
+
+#### Data Format
+
+We will be using data sets provided in the `metafor` package to practice fitting SMD random-effects models in R. The data set `dat.normand1999` presents the results from 9 studies on length of the hospital stay for stroke patients that received specialist care (group 1) and patients that received conventional or home care (group 2).
+
+```{r}
+# Sweep environment first
+# install.packages("metafor")
+library(metafor)
+dat<-dat.normand1999
+print(dat)
+```
+
+The data set assigns a numerical index to each study, lists the location of each study, gives the number of patients involved in each treatment group in that study (`n1i` and `n2i`), the average length of the hospital stay in days for patients in each group (`m1i` and `m2i`) and the standard deviation for hospital stays in each patient group (`sd1i` and `sd2i`).
+
+#### Computing SMD for each study using `escalc` function
+
+```{r}
+SMDdat<-escalc(measure="SMD", m1i=m1i, sd1i=sd1i, n1i=n1i,
+                              m2i=m2i, sd2i=sd2i, n2i=n2i, data=dat)
+print(SMDdat)
+```
+
+`yi` output gives the standardized mean difference for each study and `vi` gives the corresponding sampling variance for each study.
+
+#### Fitting a random-effects model to the data with `rma` function
+
+```{r}
+myModel<-rma(yi,vi,data=SMDdat)
+print(myModel)
+```
+
+Looking at the `Model Results` section, the `estimate` shows that patients in group 1 (specialist care) spend half of a standard deviation fewer days in the hospital compared to patients in group 2 (routine care).
+
+The ${I^2}$ statistic estimates (in percent) how much of the variability in effect size estimates can be attributed to the heterogeneity among the true effects of each sample group.
+
+#### Alternative data set with ecological relevance
+
+```{r}
+dat<-dat.curtis1998
+head(dat)
+# Rerun code above
+```
+
+
+### Transformed Correlation Coefficients
+
+Here, types of data we are interested in meta-analyzing consist of two continuous variables, where the observed effect is the strength of the linear relationship between an indepent and a response variable. The observed effect variable for this test is `ri`, the raw correlation coefficient from each study as well as `ni`, the corresponding sample size for each study.
+
+The `measure` I will use to meta-analyze studies in this analysis is `ZCOR` which calculates the Fisher's r-to-z transformed correlation coefficient. This transformation is a variance stabilizing transformation, and as an added bonus, also is an effective normalizing transformation (Fisher, 1921).
+
+The Fisher’s r-to-z transformed correlation coefficient is equal to `1/2 * log((1 + ri)/(1 - ri))`.
+
+If you would rather analyze the raw correlation coefficients from each study, use `measure = "COR"`.
+
+#### Example: Analyzing the relationship between temperature and soil respiration.
+
+You collect studies that observe the correlation between temperature and soil respiration rates, both continuous variables. From each independent study `i`, you would extract the correlation coefficient from the linear relationship between temperature and soil respiration `ri` as well as the sample size from each study `ni`.
+
+### Fitting an Transformed Correlation Coefficient Random-Effect Model for a Meta-Analysis
+
+#### Data Format
+
+We will be using data sets provided in the `metafor` package to practice fitting transformed correlation coefficient random-effects models in R. The data set `dat.mcdaniel1994` presents the results from 160 studies on the correlation between performance on an employment interview assessment and job performance.
+
+```{r}
+dat<-dat.mcdaniel1994
+head(dat)
+```
+
+The data set assigns a numerical index to each study and lists the sample size of each study, `ni`, as well as the correlation coefficient for the linear relationship between the interview assessment performance and job performance for each study, `ri`.
+
+#### Computing Fisher's transformed correlation coefficent for each study using `escalc` function
+
+```{r}
+Zdat<-escalc(measure="ZCOR", ri=ri, ni=ni, data=dat)
+head(Zdat)
+```
+
+Output gives the transformed correlation coefficient and the variance for each study.
+
+#### Fitting a random-effects model to the data with `rma` function
+
+Once the "observed effect" has been calculated, a random-effects model is fit to the data in the same way as above.
+
+```{r}
+myModel<-rma(yi,vi,data=Zdat)
+print(myModel)
+```
+
+Link to really useful paper that describes the functionality of different effect measures and different models in `metafor` will be provided on website as well!
+
+Conducting Meta-Analyses in R with the metafor Package
+Wolfgang Viechtbauer
+Journal of Statistical Software, Volume 35, Issue 3, August 2010
