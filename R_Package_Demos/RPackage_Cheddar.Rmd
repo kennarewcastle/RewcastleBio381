@@ -1,0 +1,274 @@
+##Cheddar##
+  - Provides a flexible, extendable representation of an ecological community or communities
+  - Range of functions for analysis and visulaization  
+    + Specifically it focuses on food web dynamics, body mass, and numerical abundnace data  
+    + Allows for inter-web comparisons (changes in community structure over environmental, temporal, or spatial gradient)
+```{r}
+# load package
+library(cheddar)
+# load data
+data(TL84)
+```
+
+###Properties###
+Contains properties applicable to the community.  
+  - Must contain one row of data and title column  
+  - M & N units must be present if they are present in the nodes csv
+```{r}
+# create vectors for each field in properties
+dir.create("TL84")
+# create vectors
+title = "Tuesday Lake sampled in 1984"
+N.units = "m^-3"
+M.units = "kg"
+lat = 46.21667
+long = 89.53333
+habitat = "Freshwater pelagic"
+# making a data frame with vectors 
+properties<-data.frame(title, N.units, M.units, lat, long, habitat)
+properties
+## write csv #row.names=FALSE the column names wouldnt line up
+write.csv(properties, file="TL84/properties.csv", row.names=FALSE)
+```
+
+###Nodes###
+Defines species and associated properties  
+  - Contains one row for every species in the community  
+  - Node column is the only mandatory column  
+    + M & N represent Mass & Numerical Abundance
+```{r}
+# create vectors that we are putting into a data frame
+node = TL84$nodes$node
+# Cheddar has a really nice function to collapse the community by any of these categories
+M = TL84$nodes$M
+N = TL84$nodes$N
+kingdom = TL84$nodes$kingdom
+phylum = TL84$nodes$phylum
+class = TL84$nodes$class
+order = TL84$nodes$order
+family = TL84$nodes$family
+genus = TL84$nodes$genus
+species = TL84$nodes$species
+# making a data frame with vectors 
+nodes<-data.frame(node,
+                  M, N, kingdom, phylum, class, order, family, genus, species)
+head(nodes)
+##write csv
+write.csv(nodes, file="TL84/nodes.csv", row.names=FALSE)
+```
+
+###Trophic.Links###
+Optional file that defines foodweb (trophic links)  
+  - File contains a row for every resource consumer trophic interaction in the community  
+  - Values in resource & consumer should contain node names
+```{r}
+# create trophic.links.csv for cheddar
+resource = TL84$trophic.links$resource
+consumer = TL84$trophic.links$consumer
+trophic.links<-data.frame(resource, consumer)
+head(trophic.links)
+## write csv
+write.csv(trophic.links, file="TL84/trophic.links.csv", row.names=FALSE)
+TL84<-LoadCommunity("./TL84", fn='read.csv')
+## You can also weight the trophic interaction in this file by adding a new column.
+## For example, in the Chesapeakbay dataset there is a biomass.flow column in trophic.links
+# load dataset
+data(ChesapeakeBay)
+# lets take a peak!
+head(ChesapeakeBay$trophic.links)
+```
+
+###Abundance vs Mass (Network Connection Overlay) Plot###
+```{r}
+# Plot 1 species
+PlotNvM(TL84, col=1, pch=19, highlight.nodes=NULL, show.web=FALSE) # can easily do without cheddar
+PlotNvM(TL84, col=1, pch=19, highlight.nodes=NULL, show.web=TRUE)
+PlotNvM(TL84, col=1, pch=19, highlight.nodes='Daphnia pulex') # highlight an individual
+PlotNvM(TL84, col=1, pch=19, highlight.nodes='Daphnia pulex', 
+  highlight.links=TrophicLinksForNodes(TL84, 'Daphnia pulex')) # highligh an individual & links
+# Plot 2 species
+PlotNvM(TL84, col=1, pch=19, highlight.nodes=c('Daphnia pulex','Trichocerca cylindrica'))
+#creates a vector of colors with length equaling the number of nodes
+node.names<-TL84$nodes$node
+for (i in 1:length(node.names)){
+  if(node.names[i]=='Daphnia pulex'){
+    node.names[i] <- "red"
+  } else if(node.names[i]=='Trichocerca cylindrica'){
+    node.names[i] <- "blue"
+  } else {
+    node.names[i] <- "darkgrey"
+  }
+}
+ 
+trophic.links<-TL84$trophic.links
+trophic.links$color<-"black"
+for (i in 1:nrow(trophic.links)){
+  if((trophic.links[i,1] =='Daphnia pulex' | trophic.links[i,2] =='Daphnia pulex' )){
+    trophic.links[i,3] <- "red"
+  } else if((trophic.links[i,1] =='Trichocerca cylindrica'| trophic.links[i,2] =='Trichocerca cylindrica')){
+    trophic.links[i,3] <- "blue"
+  } else {
+    trophic.links[i,3] <- "grey"
+  }
+}
+ 
+PlotNvM(TL84,
+        col=node.names,
+        link.col=trophic.links$color,
+        pch=16,
+        highlight.nodes=NULL
+        )
+```
+
+###Food-Web By Level Plot###
+```{r}
+# Compare prey-averaged and chain-averaged trophic level
+par(mfrow=c(1,2)) # setting up 2 plots
+PlotWebByLevel(TL84, ylim=c(1,5.8),level='PreyAveragedTrophicLevel', main='Prey-averaged',col=1, pch=19,           highlight.nodes=NULL) # the mean trophic level of the node's resources, using the matrix inversion method of Levine (1980)
+PlotWebByLevel(TL84, ylim=c(1,5.8),level='ChainAveragedTrophicLevel', main='Chain-averaged',col=1, pch=19,           highlight.nodes=NULL) # 1 plus the average chain length of all paths from each node to a basal species
+   
+ 
+# Compare the three different x layouts
+par(mfrow=c(1,3))
+    for(x.layout in c('skinny', 'narrow', 'wide'))
+    {
+        PlotWebByLevel(TL84, x.layout=x.layout, main=x.layout, col=1, pch=19, highlight.nodes=NULL)
+    }
+   
+   
+# Compare the effect of staggering levels
+par(mfrow=c(1,2))
+# No staggering - stagger and max.nodes.per.row are ignored
+PlotWebByLevel(TL84, y.layout='compress',col=1, pch=19)
+# Stagger
+PlotWebByLevel(TL84, y.layout='stagger', stagger=0.1,col=1, pch=19,
+                   max.nodes.per.row=20)
+
+# Highlight pulex
+PlotWebByLevel(TL84, y.layout='stagger', stagger=0.1,col=1, pch=19,highlight.nodes='Daphnia pulex',
+                   max.nodes.per.row=20)  # just node
+PlotWebByLevel(TL84, y.layout='stagger', stagger=0.1,col=1, pch=19, highlight.nodes='Daphnia pulex', highlight.links=TrophicLinksForNodes(TL84, 'Daphnia pulex'), max.nodes.per.row=20) # node and trophic links
+```
+
+###Chesapeake Bay Data, Symbolizing Links###
+```{r}
+# ChesapeakeBay Data
+data(ChesapeakeBay)
+# plot basic food web
+PlotWebByLevel(ChesapeakeBay,
+               col=1,
+               pch=20,
+               highlight.nodes=NULL)
+# develop link line widths based on biomass flow
+# log transform for graphical representation
+link.lwd=log(ChesapeakeBay$trophic.links$biomass.flow)
+# plot food web with link weights
+PlotWebByLevel(ChesapeakeBay,
+               col=1,
+               pch=19,
+               highlight.nodes=NULL,
+               link.lwd=link.lwd,
+               main="Chesapeake Bay Weighted by Flow"
+               )
+```
+
+###Kingdom Level Regression###
+```{r}
+# custom symbols for each kingdom
+symbol.spec = c(Bacteria=21, Plantae=22, Chromista=23,
+                 Protozoa=24, Animalia=25, 19)
+symbol.spec
+colour.spec = c(Bacteria='purple3', Plantae='green3', Chromista='blue3', Protozoa='orange3',
+Animalia='red3', 'black')
+# Plot NvM and legend
+PlotNvM(TL84,
+symbol.by='kingdom', symbol.spec=symbol.spec, bg.by='kingdom', bg.spec=colour.spec, colour.by='kingdom', colour.spec=colour.spec, highlight.nodes=NULL)
+legend("topright", legend=names(colour.spec), pch=symbol.spec,
+        col=colour.spec, pt.bg=colour.spec)
+
+# different regression lines for desnity and biomass for diff kingdoms 
+PlotNvM(TL84,
+symbol.by='kingdom', symbol.spec=symbol.spec, bg.by='kingdom', bg.spec=colour.spec, colour.by='kingdom', colour.spec=colour.spec, highlight.nodes=NULL, show.web=FALSE)
+legend("topright", legend=names(colour.spec), pch=symbol.spec,
+        col=colour.spec, pt.bg=colour.spec)
+models <- NvMLinearRegressions(TL84, class='kingdom')
+colours <- PlotLinearModels(models, colour.spec=colour.spec)
+```
+
+###Lumping Communities###
+```{r}
+# Lumping community by order
+# Create vector desginating lumpage
+lump <- NP(TL84, 'order') # NP extracts node/species property
+head(lump, 20)
+# rename parts of vector with "" for order name.
+lump[""==lump] <- names(lump[""==lump] )
+head(lump, 20)
+#create lumped community dataset
+TL84.lumped <- LumpNodes(TL84, lump)
+TL84.lumped
+# were gonna make 4 plots to NvM 1 not lumped and 1 lumped
+par(mfrow=c(2,2))
+PlotNvM(TL84, col=1, pch=19, highlight.nodes=NULL)
+PlotNvM(TL84.lumped, col=1, pch=19, highlight.nodes=NULL)
+PlotWebByLevel(TL84, y.layout='stagger', stagger=0.1,col=1, pch=19,
+                   max.nodes.per.row=20)
+PlotWebByLevel(TL84.lumped, y.layout='stagger', stagger=0.1,col=1, pch=19,
+                   max.nodes.per.row=20)
+```
+
+
+
+###Working With Multiple Communities At ONCE###
+```{r}
+# load dataset
+data("pHWebs")
+pHWebs
+# example communities (2/10)
+pHWebs$`Old Lodge`
+pHWebs$`Afon Hafren`
+pHWebs$`Afon Hafren`$properties
+# Export pHWebs to a directory
+SaveCollection(pHWebs, "./comm")
+# Import pHWebs from a directory
+pHWebs<-LoadCollection("./comm")
+ 
+# Biomass by Abundance for multiple communities
+plot(pHWebs, col=1, pch=19, highlight.nodes=NULL)
+# Food Webs for multiple communities
+plot(pHWebs, plot.fn=PlotWebByLevel, col=1, pch=19, highlight.nodes=NULL)
+ 
+# Returns a data.frame of first-class and computed properties of communities (Master data frame)
+CollectionCPS(pHWebs)
+ 
+# community characteristics
+pH.char<-CollectionCPS(pHWebs, c('pH',                   #Community Property##i.e.: pHWebs$`Old Lodge`$properties
+                                 'NumberOfNodes',        #cheddar function  ##i.e.: NumberOfNodes(pHWebs$`Old Lodge`)
+                                 'NumberOfTrophicLinks', #cheddar function  ##...
+                                 'DirectedConnectance',  #cheddar function  ##...
+                                 'NvMSlope'))            #cheddar function  ##...
+head(pH.char) 
+# Node connectivity for all communities
+pH.conn<-CollectionCPS(pHWebs, c('pH',              #Community Property
+                        'FractionBasalNodes',       #cheddar function
+                        'FractionIntermediateNodes',#cheddar function
+                        'FractionTopLevelNodes',    #cheddar function
+                        'FractionIsolatedNodes'))   #cheddar function
+head(pH.conn) 
+# Plot relationships between pH and community structure.
+par(mfrow=c(2,3))
+with(pH.char, plot(pH, NumberOfTrophicLinks, pch=19, main="pH & NumberOfTrophicLinks", cex.lab=1.4))
+with(pH.char, plot(pH, NumberOfNodes, pch=19, main="pH & NumberOfTrophicLinks", cex.lab=1.4))
+with(pH.conn, plot(pH, FractionBasalNodes, pch=19, main="pH & FractionBasalNodes", cex.lab=1.4))
+with(pH.conn, plot(pH, FractionIntermediateNodes, pch=19, main="pH & FractionIntermediateNodes", cex.lab=1.4))
+with(pH.conn, plot(pH, FractionTopLevelNodes, pch=19, main="pH & FractionTopLevelNodes", cex.lab=1.4))
+with(pH.conn, plot(pH, FractionIsolatedNodes, pch=19, main="pH & FractionIsolatedNodes", cex.lab=1.4))
+ 
+ 
+ 
+# Order community by pH
+pHWebs.d <- OrderCollection(pHWebs, 'pH', decreasing=TRUE)
+# Plot food webs ordered by pH
+plot(pHWebs.d, plot.fn=PlotWebByLevel, col=1, pch=19, highlight.nodes=NULL)
+```
+
