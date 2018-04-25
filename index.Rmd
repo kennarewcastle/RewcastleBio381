@@ -17,6 +17,8 @@ I'm on [Twitter](https://twitter.com/kennarewcastle?lang=en)
 
 [Link](http://support.typora.io/Draw-Diagrams-With-Markdown/) for Typora Mermaid flowchart help.
 
+[Tutorial](metafor_tutorial.html) for the `metafor` package that covers the basics of meta-analytical techniques and an introduction to fitting random-effects models to standardized mean difference data and transformed correlation coefficient data in a meta-analysis framework.
+
 ## Homework Assignments
 
 Assignment  | Output | Content Description
