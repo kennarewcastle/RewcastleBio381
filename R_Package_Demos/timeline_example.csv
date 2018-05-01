@@ -1,0 +1,27 @@
+ID,content,start,end,type,group,style
+1,Kamp Kill Kare Summer Camp for Boys*,1912-01-01,1966-12-31,range,N,background-color:lightblue;
+2,St. Albans 1st Wastewater Treatment Plant,1936-01-01,,box,LP,background-color:khaki; 
+3,St. Albans Wastewater Treatment Plant Upgrades,1959-01-01,,box,LP,background-color:khaki;
+4,Lake Champlain Committee Formed,1963-01-01,,box,LP,background-color:khaki;
+5,2nd Wastewater Treatment Plant Built for Prison,1968-01-01,,box,LP,background-color:khaki;
+6,St. Albans Wastewater Treatment Plant Upgrades,1986-01-01,,box,LP,background-color:khaki;
+7,Cyanobacteria Problems Gain Notice,1970-01-01,1979-12-31,range,N,background-color:lightblue;
+8,"<a href=""https://www.epa.gov/laws-regulations/history-clean-water-act"">Clean Water Act</a>",1972-10-18,,box,NP,background-color:pink;
+9,Lake Champlain Basin Study,1979-01-01,,box,SP,background-color:plum;
+10,Water Quality Act of 1987 (Section 319),1987-02-04,,box,NP,background-color:pink;
+11, 1990 Lake Champlain Special Designation Act ,1990-11-05,,box,NP,background-color:pink;
+12,Lake Champlain Management Conference Phosphorus Reduction Agreement*,1996-01-01,,box,SP,background-color:plum;
+13,Cyanotoxins 1st Documened in Lake Champlain*,1999-01-01,,box,N,background-color:lightblue;
+14,VT 2002 Lake Champlain TMDL Approved,2002-11-04,,box,TMDL,background-color:coral;
+15,LCC Blue-green Algae Ciizen Monitoring Project Begins*,2003-01-02,,box,LP,background-color:khaki;
+16,Conservation Law Fund Sues EPA,2008-10-28,,box,TMDL,background-color:coral;
+17,CLF & EPA Settlement Agreement*,2010-04-01,,box,TMDL,background-color:coral;
+18,BLOOM: The Plight of Lake Champlain Documentary Released,2010-12-02,,box,N,background-color:lightblue;
+19,EPA Withdraws TMDL,2011-01-24,,box,TMDL,background-color:coral;
+20,Flooding of 2011,2011-04-13,2011-06-19,range,N,background-color:lightblue;
+21,Hurricane Irene Flooding,2011-08-28,,box,N,background-color:lightblue;
+22,Vermont Lake Champlain Phosphorus TMDL Phase 1 Implementation Plan*,2014-05-01,,box,TMDL,background-color:coral;
+23,Vermont Clean Water Act (Act 64),2015-06-16,,box,SP,background-color:plum;
+24,Dog's death fuels lake cyanobacteria scare,2015-08-12,,box,N,background-color:lightblue;
+25,EPA approves Lake Champlain TMDL and  Vermont’s Phase 1 plan,2016-06-17,,box,TMDL,background-color:coral;
+26,St. Albans City Stormwater Utility Begins,2018-07-01,,box,LP,background-color:khaki;
