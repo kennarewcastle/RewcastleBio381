@@ -96,3 +96,4 @@ p1 + geom_line(mapping=aes(x=S, y=V)) + facet_grid(K~Vmax)
 
 p2<-p1
 p2 + geom_line(mapping=aes(x=S, y=V,group=Vmax)) + facet_grid(.~K)
+

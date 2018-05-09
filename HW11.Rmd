@@ -1,0 +1,144 @@
+---
+title: "Homework 11"
+author: "Kenna Rewcastle"
+date: "April 4, 2018"
+output: html_document
+---
+
+## Function Plotting
+
+This [R script](HW11.R) creates functions for plotting the Michaelis-Menten equation for enzyme kinetics an analyzing the sensitivity of this model to changes in specific parameter values.
+
+## Randomization Tests
+
+Randomization tests reshuffle the response variable observations to decouple the response variable from the predictor variable. The same statistical analysis (in this case, an ANOVA) is run on both the randomized data and the original data as a way of testing the null hypotheses. If the results for the original data are statistically different from the results of the randomized data, we can reject the null hypothesis.
+
+### Steps for Randomization Test:
+		1. Define a metric, x, which describes a pattern in the data and must be a single number
+		
+		2. Calculate xobs which is the value of that metric for the observed data (ex. regression slope for a        data set that relates two values).
+		
+		3. Randomize (reshuffle) the existing data to generate the null distribution (i.e. reshuffle data to         represent the null hypothesis).
+			* Ex. If x and y are positively related, reshuffle the values in the columns of x and y so they're          associated with new x or y values. This will uncouple the association between x and y. The                covariance between x and y has also been destroyed, and the resulting slope will be effectively 0.
+			
+		4. Calculate xsim which is the metric of x for the randomized (reshuffled) data set; no longer have to        assume normally distributed error or constant variances.
+		
+		5. Repeat steps 3 & 4 many times (usually 1000 iterations) --> end result is a vector of xsim values
+		
+		6. Create a histogram of  xsim values; find where original xobs lies on this distibrution of xsim            values. 
+		
+If most common xsim = xobs, we accept the null hypothesis. (What proportion of Xsim values is Xobs less than or greater than??, i.e. is Xobs in the tails of the distribution?)
+
+```{r}
+# Preliminaries
+library(ggplot2)
+library(dplyr)
+library(TeachingDemos)
+char2seed("Cruel April") # Sets seed of random number generator
+
+#########################################################################################################
+# FUNCTION: readData
+# Read in or generate data frame
+# input: z= file name (or nothing for demo)
+# output: 3-column data frame of observed data (ID, x, y)
+#--------------------------------------------------------------------------------------------------------
+
+readData<-function(z=NULL) {
+  if(is.null(z)) {
+  ID<-seq(from=1,to=24) # creates a unique ID for each sample
+  core<-rep(1:2,each=12) # string of core treatment IDs
+
+  # Leaf labeled cores with effect of rhizosphere manipulation
+  L1<-rnorm(12,mean=-0,sd=10) # highest assimilation
+  L2<-rnorm(12,mean=-20,sd=10) # lowest assimilation of added substrate, mean is close to background   levels
+  L<-c(L1,L2) # All leaf data in one vector
+
+  z<-data.frame(ID=ID,x=as.factor(core),y=L)
+  }
+  return(z)
+}
+
+##########################################################################################################
+# FUNCTION: getMetric
+# calculate the metric for randomization test
+# input: 3-column data frame for mean difference calculation
+# output: difference between the means of each group
+#--------------------------------------------------------------------------------------------------------
+
+getMetric<-function(z) {
+
+  group1<-filter(z,x==1)
+  group2<-filter(z,x==2)
+  meanDif<-mean(group1$y)-mean(group2$y)
+  
+  return(meanDif)
+}
+
+#########################################################################################################
+# FUNCTION: shuffleData
+# Randomize data for regression analysis
+# input: 3-column data frame (ID, x, y)
+# output: Reshuffled 3-column data frame (ID, x, y)
+#--------------------------------------------------------------------------------------------------------
+
+shuffleData<-function(z) {
+  z[,3]<-sample(z[,3]) # Reshuffles contents of y vector, default of sample is replace=FALSE
+  return(z)
+}
+
+#########################################################################################################
+# FUNCTION: getPVal
+# Calculate p value for observed, simulated data
+# input: list of observed metric (single number, Xobs) and vector of simulated metric (Xsim)
+# output: lower, upper tail probability vector (2-element vector that gives proporation of Xsim data above and below the value of Xobs)
+#--------------------------------------------------------------------------------------------------------
+
+getPVal<-function(z=NULL) {
+  if(is.null(z)) {
+   z<-list(xObs=runif(1),xSim=runif(1000)) # Fake data set for observed and simulated metrics
+  }
+  pLower<-mean(z[[2]]<=z[[1]]) # Mean value of Xsims that are less than or equal to Xobs
+  pUpper<-mean(z[[2]]>=z[[1]]) 
+  return(c(pL=pLower,pU=pUpper))
+}
+
+#########################################################################################################
+# FUNCTION: plotRanTest
+# ggplot graph
+# input: list of observed metric and vector of simulated metric
+# output: ggplot graph
+#--------------------------------------------------------------------------------------------------------
+
+plotRanTest<-function(z=NULL) {
+  if(is.null(z)) {
+    z<-list(xObs=runif(1),xSim=runif(1000)) # Fake data set for observed and simulated metrics
+  }
+  
+  dF<-data.frame(ID=seq_along(z[[2]]),simX=z[[2]])
+  
+  p1<-ggplot(data=dF,mapping=aes(x=simX))
+  p1 + geom_histogram(mapping=aes(fill=I("steelblue"),color=I("black"))) + geom_vline(aes(xintercept=z[[1]],col="red"),lwd=1.5)
+  
+}
+
+#--------------------------------------------------------------------------------------------------------
+
+# Main body of code
+nSim<-1000 # Number of simulations
+Xsim<-rep(NA,nSim) # Will hold simulated slopes
+
+dF<-readData()
+Xobs<-getMetric(z=dF)
+
+for (i in seq_len(nSim)) {
+  Xsim[i] <-getMetric(shuffleData(dF)) # Shuffles data and calculates slope for shuffled data at each iteration
+}
+
+mean_differences<-list(Xobs,Xsim) # Compiles these values into list needed for final function
+
+getPVal(mean_differences) # Xobs lies in far right tail of distribution of Xsims 
+
+plotRanTest(mean_differences)
+```
+
+Because Xobs is very different than the average Xsim value, we can reject the null hypothesis. There is a treatment effect of rhizosphere manipulation on microbial assimilation of the 13C leaf substrate because the mean differences in the observed data are different from the mean differences from a randomized data set.
