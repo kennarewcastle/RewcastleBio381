@@ -1,0 +1,126 @@
+---
+title: "Homework 9"
+author: "Kenna Rewcastle"
+date: "March 21, 2018"
+output: html_document
+---
+
+## Using Structured Programming to Link Functions Together
+
+```{r}
+#########################################################################################################
+# FUNCTION: createData
+# Creates data frame to test the effect of the rhizosphere manipulation on microbial assimilation of starch and leaf substrates
+# input: NULL
+# output: 4-column data frame (ID, rhizosphere manipulation treatment, substrate type, assimilation)
+#--------------------------------------------------------------------------------------------------------
+
+createData<-function() {
+
+ID<-seq(from=1,to=72) # creates a unique ID for each sample
+core<-rep(1:3,each=12,times=2) # string of core treatment IDs
+label<-rep(c("L","S"),each=36) # string of substrate type IDs
+
+# Leaf labeled cores with effect of rhizosphere manipulation
+L1<-rnorm(12,mean=-0,sd=10) # highest assimilation
+L2<-rnorm(12,mean=-10,sd=10) # moderate assimilation
+L3<-rnorm(12,mean=-20,sd=10) # lowest assimilation of added substrate, mean is close to background levels
+L<-c(L1,L2,L3) # All leaf data in one vector
+
+# Strach labeled cores, rhizosphere manipulation does not affect microbial assimilation of substrate
+S<-rnorm(36,mean=-15,sd=10)
+
+# All assimilation values (leaf and starch) in one vector
+leaf_starch<-c(L,S)
+
+data<-data.frame(ID=ID,Rhizosphere_Manipulation=as.factor(core),Labeled_Substrate=label,Assimilation_13C=leaf_starch)
+
+return(data)
+}
+
+#########################################################################################################
+# FUNCTION: myANOVA
+# Returns anova output that shows differences in microbial assimilation of 13C between treatments and substrate types.
+# input: data = 4-column data frame (ID, rhizosphere manipulation treatment, substrate type, assimilation)
+# output: ANOVA output table
+#--------------------------------------------------------------------------------------------------------
+library(dplyr)
+
+myANOVA<-function(data=NULL) {
+  
+  if (is.null(data)) {
+    data<-data.frame(ID=seq(from=1,to=72),
+                     Rhizosphere_Manipulation=rep(1:3,each=12,times=2),
+                     Labeled_Substrate=rep(c("L","S"),each=36),
+                     Assimilation_13C=rnorm(72,mean=-15,sd=10))
+  }
+  
+  leafData<-filter(data,Labeled_Substrate=="L")
+  starchData<-filter(data,Labeled_Substrate=="S")
+  
+  starchMod<-lm(starchData$Assimilation_13C~starchData$Rhizosphere_Manipulation)
+  starchResults<-anova(starchMod)
+  print("STARCH SUBSTRATE RESULTS")
+  print(starchResults)
+  
+  leafMod<-lm(leafData$Assimilation_13C~leafData$Rhizosphere_Manipulation)
+  leafResults<-anova(leafMod)
+  print("LEAF SUBSTRATE RESULTS")
+  print(leafResults)
+}
+
+#########################################################################################################
+# FUNCTION: myBoxplots
+# Produces boxplots from rhizosphere manipulation experiment.
+# input: data = 4-column data frame (ID, rhizosphere manipulation treatment, substrate type, assimilation)
+# output: Two-panelled figure containing boxplots for leaf and starch data.
+#--------------------------------------------------------------------------------------------------------
+library(gridExtra)
+library(ggplot2)
+
+myBoxplots<-function(data=NULL) {
+  if (is.null(data)) {
+    data<-data.frame(ID=seq(from=1,to=72),
+                     Rhizosphere_Manipulation=rep(1:3,each=12,times=2),
+                     Labeled_Substrate=rep(c("L","S"),each=36),
+                     Assimilation_13C=rnorm(72,mean=-15,sd=10))
+  }
+  
+  leafData<-filter(data,Labeled_Substrate=="L")
+  starchData<-filter(data,Labeled_Substrate=="S")
+  
+  #### Starch Figure
+  starchFig<-ggplot(starchData,aes(x=as.factor(Rhizosphere_Manipulation),y=Assimilation_13C)) +
+    geom_boxplot(lwd=1.5) +
+    labs(x=expression(bold("Rhizosphere Manipulation")),y=expression(bold(paste("\u03B4"^{bold("13")},"C in Microbial Biomass"," (\u2030)"))),title = expression(bold("Starch Substrate"))) +
+    scale_x_discrete(labels=c("1"="-R-M","2"="-R+M","3"="+R+M")) +
+      theme(panel.grid.minor=element_blank(),panel.grid.major=element_blank(),
+        axis.text.y=element_text(colour="black",size=10),
+        axis.text.x=element_text(colour="black",size=14),
+        axis.title=element_text(size=14,face="bold"),
+        panel.border=element_rect(fill=NA,colour="black",size=1.5),
+        panel.background=element_rect(fill=NA))
+  
+  #### Leaf Figure
+    leafFig<-ggplot(leafData,aes(x=as.factor(Rhizosphere_Manipulation),y=Assimilation_13C)) +
+    geom_boxplot(lwd=1.5) +
+    labs(x=expression(bold("Rhizosphere Manipulation")),y=expression(bold(paste("\u03B4"^{bold("13")},"C in Microbial Biomass"," (\u2030)"))),title = expression(bold("Leaf Substrate"))) +
+    scale_x_discrete(labels=c("1"="-R-M","2"="-R+M","3"="+R+M")) +
+      theme(panel.grid.minor=element_blank(),panel.grid.major=element_blank(),
+        axis.text.y=element_text(colour="black",size=10),
+        axis.text.x=element_text(colour="black",size=14),
+        axis.title=element_text(size=14,face="bold"),
+        panel.border=element_rect(fill=NA,colour="black",size=1.5),
+        panel.background=element_rect(fill=NA))
+
+    #### Final Paneled Figure
+    grid.arrange(starchFig,leafFig,nrow=1)
+}
+#--------------------------------------------------------------------------------------------------------
+
+##### Link the above functions together to create a data set, analyze that data set using an ANOVA, and graph the results.
+
+data<-createData()
+myANOVA(data)
+myBoxplots(data)
+```
