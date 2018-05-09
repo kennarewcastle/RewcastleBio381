@@ -33,11 +33,177 @@ label<-rep(c("L","S"),each=36) # string of substrate type IDs
 
 ```{r}
 # Leaf labeled cores with effect of rhizosphere manipulation
-L1<-rnorm(12,mean=-20,sd=10) # lowest assimilation of added substrate, mean is close to background levels
+L1<-rnorm(12,mean=-0,sd=10) # highest assimilation (no sugars from roots to eat, microbes are resorting to complex leaf material)
 L2<-rnorm(12,mean=-10,sd=10) # moderate assimilation
-L3<-rnorm(12,mean=0,sd=10) # highest assimilation
-  
+L3<-rnorm(12,mean=-20,sd=10) # lowest assimilation of added substrate, mean is close to background levels
+L<-c(L1,L2,L3) # All leaf data in one vector
+
 # Strach labeled cores, rhizosphere manipulation does not affect microbial assimilation of substrate
 S<-rnorm(36,mean=-15,sd=10)
+
+# All assimilation values (leaf and starch) in one vector
+leaf_starch<-c(L,S)
 ```
+
+Collect simulated data and treatment IDs into one data frame.
+
+```{r}
+data<-data.frame(ID=ID,Rhizosphere_Manipulation=as.factor(core),Labeled_Substrate=label,Assimilation_13C=leaf_starch)
+
+head(data)
+```
+
+#### Analyzing simulated data and graphing results.
+
+Write a simple ANOVA function to analyze the differences between microbial assimilation of the labeled substrate between rhizosphere manipulation treatments and substrate type (i.e. differing substrate complexity).
+
+```{r}
+#########################################################################################################
+# FUNCTION: myANOVA
+# Returns anova output that shows differences in microbial assimilation of 13C between treatments and substrate types.
+# input: data = 4-column data frame (ID, rhizosphere manipulation treatment, substrate type, assimilation)
+# output: ANOVA output table
+#--------------------------------------------------------------------------------------------------------
+library(dplyr)
+
+myANOVA<-function(data=NULL) {
+  if (is.null(data)) {
+    data<-data.frame(ID=seq(from=1,to=72),
+                     Rhizosphere_Manipulation=rep(1:3,each=12,times=2),
+                     Labeled_Substrate=rep(c("L","S"),each=36),
+                     Assimilation_13C=rnorm(72,mean=-15,sd=10))
+  }
+  
+  leafData<-filter(data,Labeled_Substrate=="L")
+  starchData<-filter(data,Labeled_Substrate=="S")
+  
+  starchMod<-lm(starchData$Assimilation_13C~starchData$Rhizosphere_Manipulation)
+  starchResults<-anova(starchMod)
+  print("STARCH SUBSTRATE RESULTS")
+  print(starchResults)
+  
+  leafMod<-lm(leafData$Assimilation_13C~leafData$Rhizosphere_Manipulation)
+  leafResults<-anova(leafMod)
+  print("LEAF SUBSTRATE RESULTS")
+  print(leafResults)
+}
+#--------------------------------------------------------------------------------------------------------
+
+myANOVA() # Function works correctly, computes ANOVA on default dataset.
+
+myANOVA(data=data) # Function works correctly on simulated data.
+```
+
+Anova output for simulated dataset shows that the rhizosphere manipulation signficantly influences microbial assimilation of leaf but **not** starch substrates.
+
+Below, an additional function has been developed to create a boxplot of the microbial assimilation data for both leaf and starch substrates.
+
+```{r}
+#########################################################################################################
+# FUNCTION: myBoxplots
+# Produces boxplots from rhizosphere manipulation experiment.
+# input: data = 4-column data frame (ID, rhizosphere manipulation treatment, substrate type, assimilation)
+# output: Two-panelled figure containing boxplots for leaf and starch data.
+#--------------------------------------------------------------------------------------------------------
+library(dplyr)
+library(gridExtra)
+library(ggplot2)
+
+myBoxplots<-function(data=NULL) {
+  if (is.null(data)) {
+    data<-data.frame(ID=seq(from=1,to=72),
+                     Rhizosphere_Manipulation=rep(1:3,each=12,times=2),
+                     Labeled_Substrate=rep(c("L","S"),each=36),
+                     Assimilation_13C=rnorm(72,mean=-15,sd=10))
+  }
+  
+  leafData<-filter(data,Labeled_Substrate=="L")
+  starchData<-filter(data,Labeled_Substrate=="S")
+  
+  #### Starch Figure
+  starchFig<-ggplot(starchData,aes(x=as.factor(Rhizosphere_Manipulation),y=Assimilation_13C)) +
+    geom_boxplot(lwd=1.5) +
+    labs(x=expression(bold("Rhizosphere Manipulation")),y=expression(bold(paste("\u03B4"^{bold("13")},"C in Microbial Biomass"," (\u2030)"))),title = expression(bold("Starch Substrate"))) +
+    scale_x_discrete(labels=c("1"="-R-M","2"="-R+M","3"="+R+M")) +
+      theme(panel.grid.minor=element_blank(),panel.grid.major=element_blank(),
+        axis.text.y=element_text(colour="black",size=10),
+        axis.text.x=element_text(colour="black",size=14),
+        axis.title=element_text(size=14,face="bold"),
+        panel.border=element_rect(fill=NA,colour="black",size=1.5),
+        panel.background=element_rect(fill=NA))
+  
+  #### Leaf Figure
+    leafFig<-ggplot(leafData,aes(x=as.factor(Rhizosphere_Manipulation),y=Assimilation_13C)) +
+    geom_boxplot(lwd=1.5) +
+    labs(x=expression(bold("Rhizosphere Manipulation")),y=expression(bold(paste("\u03B4"^{bold("13")},"C in Microbial Biomass"," (\u2030)"))),title = expression(bold("Leaf Substrate"))) +
+    scale_x_discrete(labels=c("1"="-R-M","2"="-R+M","3"="+R+M")) +
+      theme(panel.grid.minor=element_blank(),panel.grid.major=element_blank(),
+        axis.text.y=element_text(colour="black",size=10),
+        axis.text.x=element_text(colour="black",size=14),
+        axis.title=element_text(size=14,face="bold"),
+        panel.border=element_rect(fill=NA,colour="black",size=1.5),
+        panel.background=element_rect(fill=NA))
+
+    #### Final Paneled Figure
+    grid.arrange(starchFig,leafFig,nrow=1)
+}
+#--------------------------------------------------------------------------------------------------------
+
+myBoxplots() # Figures are successfully rendered using default data.
+
+myBoxplots(data=data) # Figures rendered successfully with simulated data.
+```
+
+Re-running the code that creates the data frame `data` for the simulated dataset and then running the `myANOVA` and `myBoxplots` functions will give you a feel for how different sets of random numbers within the same sampling parameters can generarte slightly different results.
+
+#### Testing the experimental design to understand minimum effect size needed to retain significant results.
+
+By adjusting the means of microbial substrate assimilation for rhizosphere manipulation group, we can investigate the minimume effect size needed to retain statistically signficant differences.
+
+For the sake of simplicity, I will simulated and analyze the differences between only two rhizosphere manipulation groups, 1 (-R-M) and 3 (+R+M).
+
+```{r}
+#########################################################################################################
+# FUNCTION: testEffect
+# Varies group means, simulates 100 sets of data and runs an ANOVA on each dataset, returns dataframe of means used and resulting p-value.
+# input:N = number of data simulations for each mean (default=50)
+# output: two column data frame that shows difference between group means and the average p-value over all N iterations of data simulation and ANOVA for each mean
+#--------------------------------------------------------------------------------------------------------
+
+testEffect<-function(N=50) {
+  K<-30
+  mean_iterations<-c() 
+  mean_dif_vec<-c()
+  p_Vec<-c()
+  
+  for (i in 1:K) {
+  treat_mean<-(-25 + i) # Varies group 3 mean by incremental distances from background levels
+
+    for (j in 1:N) {
+    L1<-rnorm(12,mean=-25,sd=10) # Assume no assimilation, mean = ambient delta13 levels
+    L3<-rnorm(12,mean=treat_mean,sd=10) # moderate assimilation
+    L<-c(L1,L3) # All leaf data in one vector
+    treat<-c(rep(1,times=12),rep(3,times=12))
+    treat<-as.factor(treat)
+    mod<-lm(L~treat)
+    results<-anova(mod)
+    mean_iterations[j]<-results$"Pr(>F)"[1]
+    }
+  
+  p_Vec[i]<-mean(mean_iterations)
+  mean_dif_vec[i]<-i
+  }
+  
+  outDat<-data.frame(Mean_Difference=mean_dif_vec,p_value=p_Vec)
+  return(outDat)
+}
+
+#--------------------------------------------------------------------------------------------------------
+options(scipen = 999) # Forces results out of scientific notation for easier interpretation of p-values
+testEffect()
+
+```
+
+The output from the `testEffect` function shows that a mean difference of approximately 10 is the minimum mean difference that will yield signficant results given my current experimental design (i.e. sample size).
+
 
